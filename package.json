@@ -1,7 +1,7 @@
 {
   "name": "jquery-gmaps",
-  "version": "1.0.1b",
-  "description": "The easy way to share urls in your web development.",
+  "version": "1.0.0",
+  "description": "Create google maps, quick and simple.",
   "main": "dist/jquery.gmaps.js",
   "engines": {
     "node": "7.6.0",
@@ -18,11 +18,7 @@
   "keywords": [
     "jquery",
     "jquery-plugin",
-    "gmaps",
-    "facebook",
-    "twitter",
-    "linkedin",
-    "google-plus"
+    "google-maps",
   ],
   "author": "Gabriel Burgos",
   "license": "MIT",

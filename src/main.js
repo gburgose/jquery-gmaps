@@ -4,7 +4,7 @@
 |_  |_|_|_|__,|  _|___|
 |___|         |_|      
 
-Version: 1.0.1b
+Version: 1.0.0
 Author: Gabriel Burgos
 Website: http://gabrielburgos.cl
 Repo: https://github.com/gburgose/jquery-gmaps
