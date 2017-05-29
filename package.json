@@ -1,0 +1,62 @@
+{
+  "name": "jquery-gmaps",
+  "version": "1.0.1b",
+  "description": "The easy way to share urls in your web development.",
+  "main": "dist/jquery.gmaps.js",
+  "engines": {
+    "node": "7.6.0",
+    "yarn": "0.21.3",
+    "npm": "4.5.0"
+  },
+  "scripts": {
+  },
+  "files": [
+    "dist/jquery.gmaps.js",
+    "dist/jquery.gmaps.min.js"
+  ],
+  "keywords": [
+    "jquery",
+    "jquery-plugin",
+    "gmaps",
+    "facebook",
+    "twitter",
+    "linkedin",
+    "google-plus"
+  ],
+  "author": "Gabriel Burgos",
+  "license": "MIT",
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "http://www.opensource.org/licenses/MIT"
+    }
+  ],
+  "dependencies": {
+    "jquery": "3.2.0"
+  },
+  "contributors": [
+    {
+      "name": "Gabriel Burgos",
+      "email": "hola@gabrielburgos.cl"
+    },
+    {
+      "name": "Felipe Parada"
+    },
+    {
+      "name": "Giuseppe Magnani"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/gburgose/jquery-gmaps.git"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-add-src": "^0.2.0",
+    "gulp-beautify": "^2.0.1",
+    "gulp-concat": "^2.6.1",
+    "gulp-remove-empty-lines": "0.0.8",
+    "gulp-rename": "^1.2.2",
+    "gulp-uglify": "^2.1.2"
+  }
+}
