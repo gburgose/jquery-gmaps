@@ -194,6 +194,8 @@
       });
       // open infowindow
       infowindow.open(gmap.map, marker);
+      // Center at marker
+      gmap.map.setCenter( this.getPosition() );
     });
 
     gmap.map.setCenter({ lat: lat, lng: lng });
@@ -204,22 +206,24 @@
 
     var gmap = this;
 
-    if ( gmap.markers.length <= 1 ){
+    var bounds = new google.maps.LatLngBounds();
 
-      var latlong = {
-        lat: gmap.markers[0].lat, 
-        lng: gmap.markers[0].lng
-      };
+    $.each( gmap.markers , function( index, value ) {
+      var latlng = new google.maps.LatLng( value.lat, value.lng );
+      bounds.extend( latlng );
+    });
 
-      gmap.map.setCenter(latlong);
-
+    if ( gmap.markers.length === 1 ){
+      gmap.map.setCenter( bounds.getCenter() );
     } else {
-
-      //gmap.map.fitBounds(gmap.bounds);
-
+      gmap.map.fitBounds( bounds );
     }
 
   }
+
+  /*
+    Create plugin
+  */
 
   $.fn.gmaps = function() {
     
