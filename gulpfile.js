@@ -27,3 +27,4 @@ gulp.task('build', function() {
 		.pipe(rename({ suffix : '.min' }))
 		.pipe(gulp.dest('.'));
 });
+

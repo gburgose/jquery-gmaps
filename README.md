@@ -27,13 +27,7 @@ $(document).ready(function(){
 ```html
 <div
   data-key="AIzaSyAiKl_QPZ8L92aLRfpH23F5jzEuIETEhWw"
-  data-lang="es"
   data-zoom="4"
-
-  data-pin-icon=""
-  data-pin-width=""
-  data-pin-height=""
-
   role="map"
   id="map">
     

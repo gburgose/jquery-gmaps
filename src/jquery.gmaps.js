@@ -18,10 +18,10 @@
 
   Gmaps = (function() {
 
-      function Gmaps(element, settings) {
+      function Gmaps(element, settings , index) {
 
         var gmap = this, dataSettings;
-        var index = $(element).index();
+        var index = index;
 
         gmap.index = index;
         gmap.id = 'jquery-gmaps-' + index;
@@ -75,12 +75,6 @@
     
   };
 
-  Gmaps.prototype.getIcon = function( element ){
-
-    var gmap = this;
-
-  };
-
   Gmaps.prototype._getLanguage = function(){
     
     var gmap = this;
@@ -97,6 +91,7 @@
 
   Gmaps.prototype._getMarkers = function( element ){
 
+    var gmap = this;
     var $markers = $(element).find('.marker');
     var markers = [];
 
@@ -105,7 +100,8 @@
       var marker = {
         'lat' : parseFloat( $(el).attr('data-lat') ),
         'lng' : parseFloat( $(el).attr('data-lng') ),
-        'html' : $(el).html()
+        'html' : $(el).html(),
+        'icon' : gmap._getIcon( el )
       };
       markers.push( marker );
     });
@@ -113,6 +109,28 @@
     return markers;
 
   };
+
+  Gmaps.prototype._getIcon = function( element ){
+
+    var gmap = this;
+
+    var _image = $(element).attr('data-marker-image');
+    var _width = parseInt( $(element).attr('data-marker-width') );
+    var _height = parseInt( $(element).attr('data-marker-height') );
+
+    if ( _image === undefined || !$.isNumeric( _width ) || !$.isNumeric( _height ) ){
+      return false;
+    }
+
+    var icon = {
+      url: _image,
+      width: _width,
+      height: _height
+    };
+
+    return icon;
+
+  }
 
   Gmaps.prototype.script = function(creation) {
 
@@ -164,7 +182,7 @@
 
     // Add default markers
     $.each( gmap.markers , function( index, value ) {
-      gmap.addMarker( value.lat, value.lng, value.html );
+      gmap.addMarker( value );
     });
 
     // Center map
@@ -172,17 +190,43 @@
 
   };
 
-  Gmaps.prototype.addMarker = function( lat, lng, html ) {
+  Gmaps.prototype.addMarker = function( settings ) {
 
     var gmap = this;
 
-    var marker = new google.maps.Marker({
-      position: { lat: lat, lng: lng },
-      map: gmap.map
-    });
+    // Create icon
 
+    /*
+    var icon = {
+       url: "../res/sit_marron.png", // url
+       size: new google.maps.Size(width, height), // size
+       origin: new google.maps.Point(0,0), // origin
+       anchor: new google.maps.Point(anchor_left, anchor_top) // anchor 
+    };
+    */
+
+    // create marker
+
+    var options = {};
+
+    options.position = new google.maps.LatLng( settings.lat, settings.lng );
+    options.map = gmap.map
+
+    if ( settings.icon !== false ){
+      options.icon = settings.icon;
+      var icon = {
+        url: settings.icon.url,
+        size: new google.maps.Size( settings.icon.width , settings.icon.height )
+      };
+    }
+
+    console.log( options );
+
+    var marker = new google.maps.Marker( options );
+
+    // Create infowindow
     var infowindow = new google.maps.InfoWindow({
-      content: html
+      content: settings.html
     });
 
     gmap.infowindows.push( infowindow );
@@ -198,7 +242,7 @@
       gmap.map.setCenter( this.getPosition() );
     });
 
-    gmap.map.setCenter({ lat: lat, lng: lng });
+    gmap.map.setCenter( options.position );
 
   }
 
@@ -236,7 +280,7 @@
 
     for (i = 0; i < l; i++) {
       if (typeof opt == 'object' || typeof opt == 'undefined')
-        _gmaps[i].gmap = new Gmaps( _gmaps[i], opt);
+        _gmaps[i].gmap = new Gmaps( _gmaps[i], opt, i);
       else
         ret = _gmaps[i].gmap[opt].apply(_gmaps[i].gmap, args);
       if (typeof ret != 'undefined') return ret;

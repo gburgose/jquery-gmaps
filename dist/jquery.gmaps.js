@@ -25,6 +25,7 @@
       gmap.markers = gmap._getMarkers(element);
       gmap.map = null;
       gmap.bounds = null;
+      gmap.infowindows = [];
       // Create floating map
       $(element).addClass('googlemap');
       var googlemap = document.createElement('div')
@@ -130,22 +131,38 @@
     var infowindow = new google.maps.InfoWindow({
       content: html
     });
+    gmap.infowindows.push(infowindow);
     marker.addListener('click', function() {
+      // close others infowindow
+      $.each(gmap.infowindows, function(index, object) {
+        object.close();
+      });
+      // open infowindow
       infowindow.open(gmap.map, marker);
+      // Center at marker
+      gmap.map.setCenter(this.getPosition());
+    });
+    gmap.map.setCenter({
+      lat: lat,
+      lng: lng
     });
   }
   Gmaps.prototype.setCenter = function() {
     var gmap = this;
-    if (gmap.markers.length <= 1) {
-      var latlong = {
-        lat: gmap.markers[0].lat,
-        lng: gmap.markers[0].lng
-      };
-      gmap.map.setCenter(latlong);
+    var bounds = new google.maps.LatLngBounds();
+    $.each(gmap.markers, function(index, value) {
+      var latlng = new google.maps.LatLng(value.lat, value.lng);
+      bounds.extend(latlng);
+    });
+    if (gmap.markers.length === 1) {
+      gmap.map.setCenter(bounds.getCenter());
     } else {
-      //gmap.map.fitBounds(gmap.bounds);
+      gmap.map.fitBounds(bounds);
     }
   }
+  /*
+    Create plugin
+  */
   $.fn.gmaps = function() {
     var _gmaps = this;
     var opt = arguments[0];
