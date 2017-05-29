@@ -11,7 +11,9 @@
   "scripts": {},
   "files": [
     "dist/jquery.gmaps.js",
-    "dist/jquery.gmaps.min.js"
+    "dist/jquery.gmaps.min.js",
+    "dist/jquery.gmaps.css",
+    "dist/jquery.gmaps.min.css"
   ],
   "keywords": [
     "jquery",
@@ -54,8 +56,11 @@
     "gulp-add-src": "^0.2.0",
     "gulp-beautify": "^2.0.1",
     "gulp-concat": "^2.6.1",
+    "gulp-cssmin": "^0.2.0",
+    "gulp-livereload": "^3.8.1",
     "gulp-remove-empty-lines": "0.0.8",
     "gulp-rename": "^1.2.2",
+    "gulp-sass": "^3.1.0",
     "gulp-strip-comments": "^2.4.5",
     "gulp-uglify": "^2.1.2"
   }

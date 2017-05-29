@@ -4,7 +4,7 @@
 |_  |_|_|_|__,|  _|___|
 |___|         |_|      
 
-Version: 1.6.0
+Version: 1.0.1b
 Author: Gabriel Burgos
 Website: http://gabrielburgos.cl
 Repo: https://github.com/gburgose/jquery-gmaps
@@ -47,6 +47,7 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
         gmap.lang = gmap._getLanguage();
         gmap.markers = gmap._getMarkers( element );
         gmap.$map = $( element );
+        gmap.style = gmap._getStyle( settings );
 
         gmap.map = null;
         gmap.bounds = null;
@@ -68,6 +69,18 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
       return Gmaps;
 
   }());
+
+  Gmaps.prototype._getStyle = function( settings ){
+
+    var gmap = this;
+    
+    try {
+      return settings.style;
+    } catch(err) {
+      return false;
+    }
+
+  };
 
   Gmaps.prototype._getKey = function( element ){
 
@@ -185,16 +198,21 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
     
     var gmap = this;
     var $map = $("."+gmap.id);
+    var options = {};
 
-    gmap.map = new google.maps.Map( $map.get(0) , {
-      zoom: gmap.zoom,
-      zoomControl: true,
-      mapTypeControl: false,
-      scaleControl: true,
-      streetViewControl: false,
-      rotateControl: false,
-      fullscreenControl: false
-    });
+    options.zoom = gmap.zoom;
+    options.zoomControl = true;
+    options.mapTypeControl = false;
+    options.scaleControl = true;
+    options.streetViewControl = false;
+    options.rotateControl = false;
+    options.fullscreenControl = false;
+
+    if ( gmap.style !== false ){
+      options.styles = gmap.style;
+    }
+
+    gmap.map = new google.maps.Map( $map.get(0) , options );
 
     // Add default markers
     $.each( gmap.markers , function( index, value ) {
@@ -280,18 +298,18 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
   $.fn.gmaps = function() {
     
     var _gmaps = this;
-    var opt = arguments[0];
-    var args = Array.prototype.slice.call(arguments, 1);
-    var l = _gmaps.length;
+    var _opt = arguments[0];
+    var _args = Array.prototype.slice.call(arguments, 1);
+    var _length = _gmaps.length;
     var i;
-    var ret;
+    var _return;
 
-    for (i = 0; i < l; i++) {
-      if (typeof opt == 'object' || typeof opt == 'undefined')
-        _gmaps[i].gmap = new Gmaps( _gmaps[i], opt, i);
+    for (i = 0; i < _length; i++) {
+      if (typeof _opt == 'object' || typeof _opt == 'undefined')
+        _gmaps[i].gmap = new Gmaps( _gmaps[i], _opt, i);
       else
-        ret = _gmaps[i].gmap[opt].apply(_gmaps[i].gmap, args);
-      if (typeof ret != 'undefined') return ret;
+        _return = _gmaps[i].gmap[_opt].apply(_gmaps[i].gmap, _args);
+      if (typeof _return != 'undefined') return _return;
     }
 
     return _gmaps;
