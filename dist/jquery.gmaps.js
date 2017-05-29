@@ -12,10 +12,10 @@
   'use strict';
   var Gmaps = window.Gmaps || {};
   Gmaps = (function() {
-    function Gmaps(element, settings) {
+    function Gmaps(element, settings, index) {
       var gmap = this,
         dataSettings;
-      var index = $(element).index();
+      var index = index;
       gmap.index = index;
       gmap.id = 'jquery-gmaps-' + index;
       gmap.url = "https://maps.googleapis.com/maps/api/js";
@@ -23,16 +23,15 @@
       gmap.zoom = gmap._getZoom(element);
       gmap.lang = gmap._getLanguage();
       gmap.markers = gmap._getMarkers(element);
+      gmap.$map = $(element);
       gmap.map = null;
       gmap.bounds = null;
       gmap.infowindows = [];
-      // Create floating map
       $(element).addClass('googlemap');
       var googlemap = document.createElement('div')
       $(googlemap).addClass('googlemap-overview');
       $(googlemap).addClass(gmap.id);
       $(element).prepend($(googlemap));
-      // Add script and init map
       gmap.script(true);
     }
     return Gmaps;
@@ -50,9 +49,6 @@
     }
     return parseInt(_zoom);
   };
-  Gmaps.prototype.getIcon = function(element) {
-    var gmap = this;
-  };
   Gmaps.prototype._getLanguage = function() {
     var gmap = this;
     var $html = $('html');
@@ -63,19 +59,35 @@
     return _lang;
   };
   Gmaps.prototype._getMarkers = function(element) {
+    var gmap = this;
     var $markers = $(element).find('.marker');
     var markers = [];
-    // Each default markers
     $markers.each(function(i, el) {
       var marker = {
         'lat': parseFloat($(el).attr('data-lat')),
         'lng': parseFloat($(el).attr('data-lng')),
-        'html': $(el).html()
+        'html': $(el).html(),
+        'icon': gmap._getIcon(el)
       };
       markers.push(marker);
     });
     return markers;
   };
+  Gmaps.prototype._getIcon = function(element) {
+    var gmap = this;
+    var _image = $(element).attr('data-marker-image');
+    var _width = parseInt($(element).attr('data-marker-width'));
+    var _height = parseInt($(element).attr('data-marker-height'));
+    if (_image === undefined || !$.isNumeric(_width) || !$.isNumeric(_height)) {
+      return false;
+    }
+    var icon = {
+      url: _image,
+      width: _width,
+      height: _height
+    };
+    return icon;
+  }
   Gmaps.prototype.script = function(creation) {
     var gmap = this;
     if (gmap.index == 0) {
@@ -112,40 +124,38 @@
       rotateControl: false,
       fullscreenControl: false
     });
-    // Add default markers
     $.each(gmap.markers, function(index, value) {
-      gmap.addMarker(value.lat, value.lng, value.html);
+      gmap.addMarker(value);
     });
-    // Center map
     gmap.setCenter();
+    gmap.$map.trigger('onLoad');
   };
-  Gmaps.prototype.addMarker = function(lat, lng, html) {
+  Gmaps.prototype.addMarker = function(settings) {
     var gmap = this;
-    var marker = new google.maps.Marker({
-      position: {
-        lat: lat,
-        lng: lng
-      },
-      map: gmap.map
-    });
+    var options = {};
+    options.position = new google.maps.LatLng(settings.lat, settings.lng);
+    options.map = gmap.map
+    if (settings.icon !== false) {
+      options.icon = settings.icon;
+      var icon = {
+        url: settings.icon.url,
+        size: new google.maps.Size(settings.icon.width, settings.icon.height)
+      };
+    }
+    var marker = new google.maps.Marker(options);
     var infowindow = new google.maps.InfoWindow({
-      content: html
+      content: settings.html
     });
     gmap.infowindows.push(infowindow);
     marker.addListener('click', function() {
-      // close others infowindow
       $.each(gmap.infowindows, function(index, object) {
         object.close();
       });
-      // open infowindow
       infowindow.open(gmap.map, marker);
-      // Center at marker
       gmap.map.setCenter(this.getPosition());
+      gmap.$map.trigger('onMarkerClick');
     });
-    gmap.map.setCenter({
-      lat: lat,
-      lng: lng
-    });
+    gmap.map.setCenter(options.position);
   }
   Gmaps.prototype.setCenter = function() {
     var gmap = this;
@@ -160,9 +170,6 @@
       gmap.map.fitBounds(bounds);
     }
   }
-  /*
-    Create plugin
-  */
   $.fn.gmaps = function() {
     var _gmaps = this;
     var opt = arguments[0];
@@ -172,7 +179,7 @@
     var ret;
     for (i = 0; i < l; i++) {
       if (typeof opt == 'object' || typeof opt == 'undefined')
-        _gmaps[i].gmap = new Gmaps(_gmaps[i], opt);
+        _gmaps[i].gmap = new Gmaps(_gmaps[i], opt, i);
       else
         ret = _gmaps[i].gmap[opt].apply(_gmaps[i].gmap, args);
       if (typeof ret != 'undefined') return ret;

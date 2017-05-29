@@ -8,8 +8,7 @@
     "yarn": "0.21.3",
     "npm": "4.5.0"
   },
-  "scripts": {
-  },
+  "scripts": {},
   "files": [
     "dist/jquery.gmaps.js",
     "dist/jquery.gmaps.min.js"
@@ -57,6 +56,7 @@
     "gulp-concat": "^2.6.1",
     "gulp-remove-empty-lines": "0.0.8",
     "gulp-rename": "^1.2.2",
+    "gulp-strip-comments": "^2.4.5",
     "gulp-uglify": "^2.1.2"
   }
 }

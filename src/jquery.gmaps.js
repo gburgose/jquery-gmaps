@@ -1,3 +1,18 @@
+/*!
+  
+| . |     | .'| . |_ -|
+|_  |_|_|_|__,|  _|___|
+|___|         |_|      
+
+Version: 1.6.0
+Author: Gabriel Burgos
+Website: http://gabrielburgos.cl
+Repo: https://github.com/gburgose/jquery-gmaps
+Issues: https://github.com/gburgose/jquery-gmaps/issues
+
+**/
+
+
 ;(function(factory) {
     
     'use strict';
@@ -31,6 +46,7 @@
         gmap.zoom = gmap._getZoom( element );
         gmap.lang = gmap._getLanguage();
         gmap.markers = gmap._getMarkers( element );
+        gmap.$map = $( element );
 
         gmap.map = null;
         gmap.bounds = null;
@@ -188,22 +204,14 @@
     // Center map
     gmap.setCenter();
 
+    // Trigger onLoad
+    gmap.$map.trigger('onLoad');
+
   };
 
   Gmaps.prototype.addMarker = function( settings ) {
 
     var gmap = this;
-
-    // Create icon
-
-    /*
-    var icon = {
-       url: "../res/sit_marron.png", // url
-       size: new google.maps.Size(width, height), // size
-       origin: new google.maps.Point(0,0), // origin
-       anchor: new google.maps.Point(anchor_left, anchor_top) // anchor 
-    };
-    */
 
     // create marker
 
@@ -219,8 +227,6 @@
         size: new google.maps.Size( settings.icon.width , settings.icon.height )
       };
     }
-
-    console.log( options );
 
     var marker = new google.maps.Marker( options );
 
@@ -240,6 +246,8 @@
       infowindow.open(gmap.map, marker);
       // Center at marker
       gmap.map.setCenter( this.getPosition() );
+      // Callback
+      gmap.$map.trigger('onMarkerClick');
     });
 
     gmap.map.setCenter( options.position );
