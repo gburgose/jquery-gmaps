@@ -26,7 +26,7 @@ $(document).ready(function(){
 
 ```html
 <div
-  data-key="AIzaSyAiKl_QPZ8L92aLRfpH23F5jzEuIETEhWw"
+  data-key="[YOUR API KEY]"
   data-zoom="4"
   role="map"
   id="map">
