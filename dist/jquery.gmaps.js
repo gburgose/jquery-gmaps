@@ -16,26 +16,35 @@
       var _ = this;
       _.element = element;
       _.settings = settings;
+      _.$canvas = null;
       _.$map = $(element);
       _.index = index;
       _.id = 'jquery-gmaps-' + index;
-      _.getMapSettings();
-      _._canvas(element);
-      _._scripts();
+      _._init(_.element);
     }
     return Gmaps;
   }());
+  Gmaps.prototype._init = function(element) {
+    var _ = this;
+    _.getMapSettings();
+    _._canvas(element);
+    _._scripts();
+  }
   Gmaps.prototype._canvas = function(element) {
     var _ = this;
+    if (_.$map.find('.googlemap-overview').length > 0) {
+      _.$map.find('.googlemap-overview').remove();
+    }
     var _googlemap = document.createElement('div');
     $(_googlemap).addClass('googlemap-overview');
     $(_googlemap).addClass(_.id);
-    return $(element).prepend($(_googlemap));
+    $(element).prepend($(_googlemap));
+    return _.$canvas = $(_googlemap);
   };
   Gmaps.prototype._scripts = function() {
     var gmap = this;
-    if (gmap.index == 0) {
-      var _api = "https://maps.googleapis.com/maps/api/js";
+    if ($('#gmaps-api').length === 0) {
+      var _api = "//maps.googleapis.com/maps/api/js";
       if (gmap.key) {
         _api += '?key=' + gmap.key;
       } else {
@@ -49,7 +58,7 @@
       api.defer = true;
       document.body.appendChild(api);
       if (gmap.clustering) {
-        var _clustering = "https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js";
+        var _clustering = "//developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js";
         var clustering = document.createElement('script');
         clustering.type = 'text/javascript';
         clustering.src = _clustering;
@@ -209,8 +218,7 @@
     if (_.style !== false) {
       _opts.styles = _.style;
     }
-    var $map = $("." + _.id);
-    _.map = new google.maps.Map($map.get(0), _opts);
+    _.map = new google.maps.Map(_.$canvas.get(0), _opts);
     $.each(_.locations, function(index, value) {
       _.addMarker(value);
     });
@@ -218,7 +226,7 @@
     _.setCenter();
     if (_.clustering) {
       var markerCluster = new MarkerClusterer(_.map, _.markers, {
-        imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'
+        imagePath: '//developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'
       });
     }
   };
@@ -303,8 +311,12 @@
       gmap.map.fitBounds(bounds);
     }
   }
-  Gmaps.prototype.reload = function() {};
-  Gmaps.prototype.destroy = function() {};
+  Gmaps.prototype.reload = function() {
+    var _ = this;
+    _._init(_.element);
+  };
+  Gmaps.prototype.destroy = function() {
+  };
   Gmaps.prototype.___getBoolean = function(_value, _default) {
     var _ret = _default;
     if (_value === "true") {

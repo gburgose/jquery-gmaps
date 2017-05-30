@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Gmaps - Multiple</title>
+  <link rel="stylesheet" href="../dist/jquery.gmaps.css">
+  
+  <style>
+    .back{
+
+    }
+    .gmaps {
+      height: 400px;
+      width: 100%;
+      background-color: #ccc;
+      margin-top: 10px;
+      position: relative;
+    }
+  </style>
+
+</head>
+<body>
+    
+    
+
+    <div id="map_1" data-key="AIzaSyAiKl_QPZ8L92aLRfpH23F5jzEuIETEhWw"
+      data-zoom="4"
+      role="map"
+      class="gmaps">
+        
+        <div
+          data-lat="-25.363"
+          data-lng="131.044" 
+          class="marker">
+          <div class="map-card">
+            <h1>This is my title</h1>
+            <p>Address: Fake street, #445, Stgo.</p>
+            <p>Phone: +56753223344</p>
+            <p>e-Mail: fake@email.com</p>
+          </div>
+        </div>
+
+        <div
+          data-lat="-28.383"
+          data-lng="132.084" 
+          class="marker">
+          <div class="map-card">
+            <h1>This is my title</h1>
+            <p>Address: Fake street, #445, Stgo.</p>
+            <p>Phone: +56753223344</p>
+            <p>e-Mail: fake@email.com</p>
+          </div>
+        </div>
+
+        <div
+          data-lat="-30.383"
+          data-lng="138.084" 
+          class="marker">
+          <div class="map-card">
+            <h1>This is my title</h1>
+            <p>Address: Fake street, #445, Stgo.</p>
+            <p>Phone: +56753223344</p>
+            <p>e-Mail: fake@email.com</p>
+          </div>
+        </div>
+
+    </div>
+
+    <div id="map_2" 
+      data-key="AIzaSyAiKl_QPZ8L92aLRfpH23F5jzEuIETEhWw"
+      data-zoom="4"
+      role="map"
+      class="gmaps">
+        
+        <div
+          data-id="1"
+          data-lat="-25.363"
+          data-lng="131.044" 
+          class="marker">
+          <div class="map-card">
+            <h1>This is my title</h1>
+            <p>Address: Fake street, #445, Stgo.</p>
+            <p>Phone: +56753223344</p>
+            <p>e-Mail: fake@email.com</p>
+          </div>
+        </div>
+
+    </div>
+
+    <button class="button-reload">Reload</button>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="../dist/jquery.gmaps.js"></script>
+
+    <script>
+      $(document).ready(function(){
+        
+        $('#map_1').gmaps();
+        $('#map_2').gmaps();
+      
+        $('.button-reload').click(function(){
+          $('#map_2').gmaps('reload');
+        });
+
+      });
+    </script>
+
+  </body>
+</html>

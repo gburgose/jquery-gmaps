@@ -47,27 +47,28 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
 
         _.element = element;
         _.settings = settings;
+        _.$canvas = null;
         _.$map = $( element );
         _.index = index;
         _.id = 'jquery-gmaps-' + index;
 
-        // default settings
-
-        _.getMapSettings();
-
-        // Create floating map
-
-        _._canvas( element );
-        
-        // Add script and init map
-
-        _._scripts();
+        _._init( _.element );
 
       }
 
       return Gmaps;
 
   }());
+
+  Gmaps.prototype._init = function( element ) {
+    var _ = this; 
+    // default settings
+    _.getMapSettings();
+    // Create floating map
+    _._canvas( element );  
+    // Add script and init map
+    _._scripts();
+  }
 
   /*
   |--------------------------------------------------------------------------
@@ -78,11 +79,19 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
   Gmaps.prototype._canvas = function( element ) {
 
     var _ = this;
+
+    // Destroy
+    if ( _.$map.find('.googlemap-overview').length > 0 ){
+      _.$map.find('.googlemap-overview').remove();
+    }
+
+    // Create
     var _googlemap = document.createElement('div');
-    
     $( _googlemap ).addClass('googlemap-overview');
     $( _googlemap ).addClass( _.id );
-    return $(element).prepend( $( _googlemap ) );
+    $(element).prepend( $( _googlemap ) );
+
+    return _.$canvas = $( _googlemap );
 
   };
 
@@ -96,11 +105,12 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
 
     var gmap = this;
 
-    if ( gmap.index == 0 ){
+    if ( $('#gmaps-api').length === 0 ){
+
 
       // Create API script
       
-      var _api = "https://maps.googleapis.com/maps/api/js";
+      var _api = "//maps.googleapis.com/maps/api/js";
 
       if ( gmap.key ) {
         _api += '?key=' + gmap.key;
@@ -120,7 +130,7 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
 
       if ( gmap.clustering ){
 
-        var _clustering = "https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js";
+        var _clustering = "//developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js";
 
         var clustering = document.createElement('script');
         clustering.type = 'text/javascript';
@@ -368,9 +378,7 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
 
     if ( _.style !== false ){ _opts.styles = _.style; }
 
-    var $map = $( "." + _.id );
-
-    _.map = new google.maps.Map( $map.get(0) , _opts );
+    _.map = new google.maps.Map( _.$canvas.get(0) , _opts );
 
     // Add default markers
     $.each( _.locations , function( index, value ) {
@@ -387,7 +395,7 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
     if ( _.clustering ){
 
       var markerCluster = new MarkerClusterer( _.map, _.markers,{
-        imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'
+        imagePath: '//developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'
       });
 
     }
@@ -556,6 +564,8 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
   */
 
   Gmaps.prototype.reload = function() {
+    var _ = this;
+    _._init( _.element );
   };
 
   /*
@@ -565,6 +575,7 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
   */
 
   Gmaps.prototype.destroy = function() {
+
   };
 
   /*
