@@ -44,12 +44,15 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
         gmap.url = "https://maps.googleapis.com/maps/api/js";
         gmap.key = gmap._getKey( element );
         gmap.zoom = gmap._getZoom( element );
+        gmap.clustering = gmap._getClustering( element );
         gmap.lang = gmap._getLanguage();
-        gmap.markers = gmap._getMarkers( element );
+        gmap.locations = gmap._getLocations( element );
         gmap.$map = $( element );
         gmap.style = gmap._getStyle( settings );
 
+
         gmap.map = null;
+        gmap.markers = [];
         gmap.bounds = null;
         gmap.infowindows = [];
 
@@ -75,22 +78,40 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
     var gmap = this;
 
     if ( gmap.index == 0 ){
+
+      // Create API script
       
-      var _url = gmap.url;
+      var _api = gmap.url;
 
       if ( gmap.key ) {
-        _url += '?key=' + gmap.key;
+        _api += '?key=' + gmap.key;
       } else {
         return false;
       }
 
-      var script = document.createElement('script');
-      script.type = 'text/javascript';
-      script.src = _url;
-      script.id = 'gmaps-script';
-      script.async = true;
-      script.defer = true;
-      document.body.appendChild(script);
+      var api = document.createElement('script');
+      api.type = 'text/javascript';
+      api.src = _api;
+      api.id = 'gmaps-api';
+      api.async = true;
+      api.defer = true;
+      document.body.appendChild(api);
+
+      // Create clustering script
+
+      if ( gmap.clustering ){
+
+        var _clustering = "https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js";
+
+        var clustering = document.createElement('script');
+        clustering.type = 'text/javascript';
+        clustering.src = _clustering;
+        clustering.id = 'gmaps-clustering';
+        clustering.async = true;
+        clustering.defer = true;
+        document.body.appendChild(clustering);
+
+      }
 
     }
 
@@ -150,14 +171,28 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
 
   };
 
-  Gmaps.prototype._getMarkers = function( element ){
+  Gmaps.prototype._getClustering = function( element ){
+    
+    var gmap = this;
+
+    var _clustering = Boolean( $( element ).attr('data-clustering') )
+
+    if ( _clustering === undefined ){
+      _clustering = false;
+    }
+
+    return _clustering;
+
+  };
+
+  Gmaps.prototype._getLocations = function( element ){
 
     var gmap = this;
-    var $markers = $(element).find('.marker');
-    var markers = [];
+    var $locations = $(element).find('.marker');
+    var locations = [];
 
-    // Each default markers
-    $markers.each(function(i,el){
+    // Each default locations
+    $locations.each(function(i,el){
       var marker = {
         'lat' : parseFloat( $(el).attr('data-lat') ),
         'lng' : parseFloat( $(el).attr('data-lng') ),
@@ -165,10 +200,10 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
         'icon' : gmap._getIcon( el ),
         'draggable' : Boolean( $(el).attr('data-draggable') ),
       };
-      markers.push( marker );
+      locations.push( marker );
     });
 
-    return markers;
+    return locations;
 
   };
 
@@ -221,15 +256,23 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
     gmap.map = new google.maps.Map( $map.get(0) , options );
 
     // Add default markers
-    $.each( gmap.markers , function( index, value ) {
+    $.each( gmap.locations , function( index, value ) {
       gmap.addMarker( value );
     });
 
-    // Center map
-    gmap.setCenter();
-
     // Trigger onLoad
     gmap.$map.trigger('onLoad');
+
+    console.log( gmap.map );
+
+    // Clustering
+    if ( gmap.clustering ){
+
+      var markerCluster = new MarkerClusterer( gmap.map, gmap.markers,{
+        imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'
+      });
+
+    }
 
   };
 
@@ -243,7 +286,6 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
 
     options.position = new google.maps.LatLng( settings.lat, settings.lng );
     options.map = gmap.map;
-
     options.clickable = true;
     options.animation = google.maps.Animation.DROP;
 
@@ -264,6 +306,8 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
     }
 
     var marker = new google.maps.Marker( options );
+
+    gmap.markers.push( marker );
 
     // Create infowindow
     var infowindow = new google.maps.InfoWindow({
@@ -295,12 +339,12 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
 
     var bounds = new google.maps.LatLngBounds();
 
-    $.each( gmap.markers , function( index, value ) {
+    $.each( gmap.locations , function( index, value ) {
       var latlng = new google.maps.LatLng( value.lat, value.lng );
       bounds.extend( latlng );
     });
 
-    if ( gmap.markers.length === 1 ){
+    if ( gmap.locations.length === 1 ){
       gmap.map.setCenter( bounds.getCenter() );
     } else {
       gmap.map.fitBounds( bounds );

@@ -20,18 +20,18 @@ var cssmin            = require('gulp-cssmin');
 var livereload        = require('gulp-livereload');
 
 gulp.task('build:js', function() {
-	gulp.src(['./src/**/*.js'])
-		// default
-		.pipe(concat('jquery.gmaps.js'))
-		.pipe(beautify({indent_size: 2}))
-		.pipe(strip( {ignore: /\/\*\*\s*\n([^\*]*(\*[^\/])?)*\*\//g} ))
-		.pipe(removeEmptyLines({ removeComments: true }))
-		.pipe(gulp.dest('./dist'))
-		// min
-		.pipe(uglify({ preserveComments: false }))
-		.pipe(rename({ suffix : '.min' }))
-		.pipe(gulp.dest('./dist'))
-		.pipe(livereload());
+  gulp.src(['./src/**/*.js'])
+    // default
+    .pipe(concat('jquery.gmaps.js'))
+    .pipe(beautify({indent_size: 2}))
+    .pipe(strip( {ignore: /\/\*\*\s*\n([^\*]*(\*[^\/])?)*\*\//g} ))
+    .pipe(removeEmptyLines({ removeComments: true }))
+    .pipe(gulp.dest('./dist'))
+    // min
+    .pipe(uglify({ preserveComments: false }))
+    .pipe(rename({ suffix : '.min' }))
+    .pipe(gulp.dest('./dist'))
+    .pipe(livereload());
 });
 
 gulp.task('build:css', function () {
@@ -48,11 +48,11 @@ gulp.task('build:css', function () {
 
 gulp.task('build:html', function () {
   return gulp.src('./test/**/*.html')
-  	.pipe(livereload());
+    .pipe(livereload());
 });
 
 gulp.task('watch', function() {
-	livereload.listen();
+  livereload.listen();
   gulp.watch('./src/**/*.js', ['build:js']);
   gulp.watch('./src/**/*.scss', ['build:css']);
   gulp.watch('./test/**/*.html', ['build:html']);

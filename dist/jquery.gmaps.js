@@ -21,11 +21,13 @@
       gmap.url = "https://maps.googleapis.com/maps/api/js";
       gmap.key = gmap._getKey(element);
       gmap.zoom = gmap._getZoom(element);
+      gmap.clustering = gmap._getClustering(element);
       gmap.lang = gmap._getLanguage();
-      gmap.markers = gmap._getMarkers(element);
+      gmap.locations = gmap._getLocations(element);
       gmap.$map = $(element);
       gmap.style = gmap._getStyle(settings);
       gmap.map = null;
+      gmap.markers = [];
       gmap.bounds = null;
       gmap.infowindows = [];
       $(element).addClass('googlemap');
@@ -40,19 +42,29 @@
   Gmaps.prototype.script = function(creation) {
     var gmap = this;
     if (gmap.index == 0) {
-      var _url = gmap.url;
+      var _api = gmap.url;
       if (gmap.key) {
-        _url += '?key=' + gmap.key;
+        _api += '?key=' + gmap.key;
       } else {
         return false;
       }
-      var script = document.createElement('script');
-      script.type = 'text/javascript';
-      script.src = _url;
-      script.id = 'gmaps-script';
-      script.async = true;
-      script.defer = true;
-      document.body.appendChild(script);
+      var api = document.createElement('script');
+      api.type = 'text/javascript';
+      api.src = _api;
+      api.id = 'gmaps-api';
+      api.async = true;
+      api.defer = true;
+      document.body.appendChild(api);
+      if (gmap.clustering) {
+        var _clustering = "https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js";
+        var clustering = document.createElement('script');
+        clustering.type = 'text/javascript';
+        clustering.src = _clustering;
+        clustering.id = 'gmaps-clustering';
+        clustering.async = true;
+        clustering.defer = true;
+        document.body.appendChild(clustering);
+      }
     }
     var loading = setInterval(function() {
       if (window.google !== undefined) {
@@ -90,11 +102,19 @@
     }
     return _lang;
   };
-  Gmaps.prototype._getMarkers = function(element) {
+  Gmaps.prototype._getClustering = function(element) {
     var gmap = this;
-    var $markers = $(element).find('.marker');
-    var markers = [];
-    $markers.each(function(i, el) {
+    var _clustering = Boolean($(element).attr('data-clustering'))
+    if (_clustering === undefined) {
+      _clustering = false;
+    }
+    return _clustering;
+  };
+  Gmaps.prototype._getLocations = function(element) {
+    var gmap = this;
+    var $locations = $(element).find('.marker');
+    var locations = [];
+    $locations.each(function(i, el) {
       var marker = {
         'lat': parseFloat($(el).attr('data-lat')),
         'lng': parseFloat($(el).attr('data-lng')),
@@ -102,9 +122,9 @@
         'icon': gmap._getIcon(el),
         'draggable': Boolean($(el).attr('data-draggable')),
       };
-      markers.push(marker);
+      locations.push(marker);
     });
-    return markers;
+    return locations;
   };
   Gmaps.prototype._getIcon = function(element) {
     var gmap = this;
@@ -136,11 +156,16 @@
       options.styles = gmap.style;
     }
     gmap.map = new google.maps.Map($map.get(0), options);
-    $.each(gmap.markers, function(index, value) {
+    $.each(gmap.locations, function(index, value) {
       gmap.addMarker(value);
     });
-    gmap.setCenter();
     gmap.$map.trigger('onLoad');
+    console.log(gmap.map);
+    if (gmap.clustering) {
+      var markerCluster = new MarkerClusterer(gmap.map, gmap.markers, {
+        imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'
+      });
+    }
   };
   Gmaps.prototype.addMarker = function(settings) {
     var gmap = this;
@@ -160,6 +185,7 @@
       options.draggable = true;
     }
     var marker = new google.maps.Marker(options);
+    gmap.markers.push(marker);
     var infowindow = new google.maps.InfoWindow({
       content: settings.html
     });
@@ -177,11 +203,11 @@
   Gmaps.prototype.setCenter = function() {
     var gmap = this;
     var bounds = new google.maps.LatLngBounds();
-    $.each(gmap.markers, function(index, value) {
+    $.each(gmap.locations, function(index, value) {
       var latlng = new google.maps.LatLng(value.lat, value.lng);
       bounds.extend(latlng);
     });
-    if (gmap.markers.length === 1) {
+    if (gmap.locations.length === 1) {
       gmap.map.setCenter(bounds.getCenter());
     } else {
       gmap.map.fitBounds(bounds);
