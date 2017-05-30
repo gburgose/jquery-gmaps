@@ -148,12 +148,12 @@
   };
   Gmaps.prototype.getMapEventDraggable = function(element) {
     var _ = this;
-    var _attr = $(element).attr('data-draggable');
+    var _attr = $(element).attr('data-event-draggable');
     return _.___getBoolean(_attr, true);
   };
   Gmaps.prototype.getMapEventDoubleClickZoom = function(element) {
     var _ = this;
-    var _attr = $(element).attr('data-doubleclick');
+    var _attr = $(element).attr('data-event-doubleclick');
     var _return = _.___getBoolean(_attr, true);
     if (_return === false) {
       _return = true;
@@ -164,7 +164,7 @@
   };
   Gmaps.prototype.getMapEventMouseWheel = function(element) {
     var _ = this;
-    var _attr = $(element).attr('data-draggable');
+    var _attr = $(element).attr('data-event-mousewheel');
     return _.___getBoolean(_attr, false);
   };
   Gmaps.prototype.getMapStyle = function(settings) {
