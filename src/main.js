@@ -80,8 +80,8 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
     var _ = this;
     var _googlemap = document.createElement('div');
     
-    $( _googlemap).addClass('googlemap-overview');
-    $( _googlemap).addClass( _.id );
+    $( _googlemap ).addClass('googlemap-overview');
+    $( _googlemap ).addClass( _.id );
     return $(element).prepend( $( _googlemap ) );
 
   };
@@ -313,8 +313,8 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
     _opts.disableDoubleClickZoom    = false;
     _opts.scrollwheel               = false;
 
-    _.$map.addClass('googlemap')
-          .addClass('googlemap-load');
+    _.$map.addClass( 'googlemap' )
+          .addClass( 'googlemap-load' );
 
     if ( _.style !== false ){ _opts.styles = _.style; }
 
