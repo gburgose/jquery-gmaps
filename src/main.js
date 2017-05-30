@@ -41,53 +41,35 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
 
       function Gmaps(element, settings , index) {
 
-        var gmap = this, dataSettings;
+        var _ = this; 
 
         // SET
 
-        gmap.$map = $( element );
-        gmap.index = index;
-        gmap.id = 'jquery-gmaps-' + index;
-
-        gmap.$map.addClass('googlemap')
-                 .addClass('googlemap-load');
+        _.element = element;
+        _.settings = settings;
+        _.$map = $( element );
+        _.index = index;
+        _.id = 'jquery-gmaps-' + index;
 
         // default settings
 
-        gmap.map = null;
-        gmap.markers = [];
-        gmap.bounds = null;
-        gmap.infowindows = [];
+        _.map = null;
+        _.markers = [];
+        _.bounds = null;
+        _.infowindows = [];
 
-        // set map settings
-
-        gmap.url = "https://maps.googleapis.com/maps/api/js";
-        gmap.key = gmap.getMapKey( element );
-        gmap.zoom = gmap.getMapZoom( element );
-        gmap.clustering = gmap.getMapClustering( element );
-        gmap.lang = gmap.getMapLanguage();
-        gmap.locations = gmap.getMapLocations( element );
-        gmap.style = gmap.getMapStyle( settings );
-
-        // Set map controls
-
-        gmap.zoomControl = gmap.getMapZoomControl( element );
-        gmap.typeControl = gmap.getMapTypeControl( element );
-        gmap.scaleControl = gmap.getMapScaleControl( element );
-        gmap.streetViewControl = gmap.getMapStreetViewControl( element );
-        gmap.rotateControl = gmap.getMapRotateControl( element );
-        gmap.fullscreenControl = gmap.getMapFullscreenControl( element );
+        _.getMapSettings();
 
         // Create floating map
 
         var googlemap = document.createElement('div')      
         $(googlemap).addClass('googlemap-overview');
-        $(googlemap).addClass( gmap.id );
+        $(googlemap).addClass( _.id );
         $(element).prepend( $(googlemap) );
         
         // Add script and init map
 
-        gmap._scripts();
+        _._scripts();
 
       }
 
@@ -109,7 +91,7 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
 
       // Create API script
       
-      var _api = gmap.url;
+      var _api = "https://maps.googleapis.com/maps/api/js";
 
       if ( gmap.key ) {
         _api += '?key=' + gmap.key;
@@ -158,14 +140,37 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
   |--------------------------------------------------------------------------
   */
 
+  Gmaps.prototype.getMapSettings = function(){
+
+    var _ = this;
+
+    // set map settings
+
+    _.key         = _.getMapKey( _.element );
+    _.zoom        = _.getMapZoom( _.element );
+    _.clustering  = _.getMapClustering( _.element );
+    _.lang        = _.getMapLanguage();
+    _.locations   = _.getMapLocations( _.element );
+    _.style       = _.getMapStyle( _.settings );
+
+    // Set map controls
+
+    _.zoomControl       = _.getMapZoomControl( _.element );
+    _.typeControl       = _.getMapTypeControl( _.element );
+    _.scaleControl      = _.getMapScaleControl( _.element );
+    _.streetViewControl = _.getMapStreetViewControl( _.element );
+    _.rotateControl     = _.getMapRotateControl( _.element );
+    _.fullscreenControl = _.getMapFullscreenControl( _.element );
+
+  };
+
   Gmaps.prototype.getMapLanguage = function(){
-    var gmap = this;
     var $html = $('html');
-    var _lang = $html.attr('lang');
-    if ( _lang === undefined || _lang === "" ){
-      _lang = "en";
+    var _setting = $html.attr('lang');
+    if ( _setting === undefined || _setting === "" ){
+      _setting = "en";
     }
-    return _lang;
+    return _setting;
   };
 
   Gmaps.prototype.getMapStyle = function( settings ){
@@ -177,107 +182,93 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
   };
 
   Gmaps.prototype.getMapKey = function( element ){
-    var gmap = this;
-    var _key = $(element).attr('data-key');
-    return _key;
+    var _setting = $(element).attr('data-key');
+    return _setting;
   };
 
   Gmaps.prototype.getMapZoom = function( element ){
-    var gmap = this;
-    var _option = $(element).attr('data-zoom');
-    if ( _option === undefined || _option === "" ){
-      _option = 4;
+    var _setting = $(element).attr('data-zoom');
+    if ( _setting === undefined || _setting === "" ){
+      _setting = 4;
     }
-    return parseInt( _option );
+    return parseInt( _setting );
   };
 
   Gmaps.prototype.getMapZoomControl = function( element ){
-    var gmap = this;
-    var _option = Boolean( $(element).attr('data-zoom-control') );
-    if ( _option === undefined || _option === "" ){
-      _option = false;
+    var _setting = Boolean( $(element).attr('data-zoom-control') );
+    if ( _setting === undefined || _setting === "" ){
+      _setting = false;
     }
-    return _option;
+    return _setting;
   };
 
   Gmaps.prototype.getMapTypeControl = function( element ){
-    var gmap = this;
-    var _option = Boolean( $(element).attr('data-type-control') );
-    if ( _option === undefined || _option === "" ){
-      _option = false;
+    var _setting = Boolean( $(element).attr('data-type-control') );
+    if ( _setting === undefined || _setting === "" ){
+      _setting = false;
     }
-    return _option;
+    return _setting;
   };
 
   Gmaps.prototype.getMapScaleControl = function( element ){
-    var gmap = this;
-    var _option = Boolean( $(element).attr('data-type-control') );
-    if ( _option === undefined || _option === "" ){
-      _option = false;
+    var _setting = Boolean( $(element).attr('data-type-control') );
+    if ( _setting === undefined || _setting === "" ){
+      _setting = false;
     }
-    return _option;
+    return _setting;
   };
 
   Gmaps.prototype.getMapStreetViewControl = function( element ){
-    var gmap = this;
-    var _option = Boolean( $(element).attr('data-type-control') );
-    if ( _option === undefined || _option === "" ){
-      _option = false;
+    var _setting = Boolean( $(element).attr('data-type-control') );
+    if ( _setting === undefined || _setting === "" ){
+      _setting = false;
     }
-    return _option;
+    return _setting;
   };
 
   Gmaps.prototype.getMapRotateControl = function( element ){
-    var gmap = this;
-    var _option = Boolean( $(element).attr('data-type-control') );
-    if ( _option === undefined || _option === "" ){
-      _option = false;
+    var _setting = Boolean( $(element).attr('data-type-control') );
+    if ( _setting === undefined || _setting === "" ){
+      _setting = false;
     }
-    return _option;
+    return _setting;
   };
 
   Gmaps.prototype.getMapFullscreenControl = function( element ){
-    var gmap = this;
-    var _option = Boolean( $(element).attr('data-type-control') );
-    if ( _option === undefined || _option === "" ){
-      _option = false;
+    var _setting = Boolean( $(element).attr('data-type-control') );
+    if ( _setting === undefined || _setting === "" ){
+      _setting = false;
     }
-    return _option;
+    return _setting;
   };
 
   Gmaps.prototype.getMapClustering = function( element ){
-    
-    var gmap = this;
-
-    var _clustering = Boolean( $( element ).attr('data-clustering') )
-
-    if ( _clustering === undefined ){
-      _clustering = false;
-    }
-
-    return _clustering;
+    var _setting = Boolean( $( element ).attr('data-clustering') )
+    if ( _setting === undefined ){ _setting = false; }
+    return _setting;
   };
 
   Gmaps.prototype.getMapLocations = function( element ){
 
-    var gmap = this;
+    var _ = this;
+
     var $locations = $(element).find('.marker');
     var locations = [];
 
-    // Each default locations
     $locations.each(function(i,el){
       var marker = {
         'id' : parseFloat( $(el).attr('data-id') ),
         'lat' : parseFloat( $(el).attr('data-lat') ),
         'lng' : parseFloat( $(el).attr('data-lng') ),
         'html' : $(el).html(),
-        'icon' : gmap.getMarkerIcon( el ),
+        'icon' : _.getMarkerIcon( el ),
         'draggable' : Boolean( $(el).attr('data-draggable') ),
       };
       locations.push( marker );
     });
 
     return locations;
+
   };
 
   /*
@@ -288,47 +279,49 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
 
   Gmaps.prototype.mapInit = function() {
     
-    var gmap = this;
-    var $map = $("."+gmap.id);
-    var options = {};
+    var _ = this;
+    var _opts = {};
 
-    console.log( gmap.zoomControl );
+    _.$map.addClass('googlemap')
+          .addClass('googlemap-load');
 
-    options.zoom = gmap.zoom;
-    options.zoomControl = gmap.zoomControl;
-    options.mapTypeControl = gmap.typeControl;
-    options.scaleControl = gmap.scaleControl;
-    options.streetViewControl = gmap.streetViewControl;
-    options.rotateControl = gmap.rotateControl;
-    options.fullscreenControl = gmap.fullscreenControl;
+    _opts.zoom = _.zoom;
+    _opts.zoomControl = _.zoomControl;
+    _opts.mapTypeControl = _.typeControl;
+    _opts.scaleControl = _.scaleControl;
+    _opts.streetViewControl = _.streetViewControl;
+    _opts.rotateControl = _.rotateControl;
+    _opts.fullscreenControl = _.fullscreenControl;
     
     /*
-    options.draggable = false;
-    options.disableDoubleClickZoom = false;
-    options.scrollwheel = false
+    _opts.draggable = false;
+    _opts.disableDoubleClickZoom = false;
+    _opts.scrollwheel = false
     */
 
-    if ( gmap.style !== false ){
-      options.styles = gmap.style;
+    if ( _.style !== false ){
+      _opts.styles = _.style;
     }
 
-    gmap.map = new google.maps.Map( $map.get(0) , options );
+    var $map = $( "." + _.id );
+
+    _.map = new google.maps.Map( $map.get(0) , _opts );
 
     // Add default markers
-    $.each( gmap.locations , function( index, value ) {
-      gmap.addMarker( value );
+    $.each( _.locations , function( index, value ) {
+      _.addMarker( value );
     });
 
     // Trigger onLoad
-    gmap.$map.trigger('onLoad');
+    _.$map.trigger('onLoad');
 
     // Centering
-    gmap.setCenter();
+    _.setCenter();
 
     // Clustering
-    if ( gmap.clustering ){
+    if ( _.clustering ){
 
-      var markerCluster = new MarkerClusterer( gmap.map, gmap.markers,{
+      var markerCluster = new MarkerClusterer( _.map, _.markers,{
         imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'
       });
 
@@ -360,7 +353,13 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
 
     return icon;
 
-  }
+  };
+
+  Gmaps.prototype.getMarkerDraggable = function( element ){
+
+
+
+  };
 
   /*
   |--------------------------------------------------------------------------
