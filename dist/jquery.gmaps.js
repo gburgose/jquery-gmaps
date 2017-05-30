@@ -160,7 +160,7 @@
       gmap.addMarker(value);
     });
     gmap.$map.trigger('onLoad');
-    console.log(gmap.map);
+    gmap.setCenter();
     if (gmap.clustering) {
       var markerCluster = new MarkerClusterer(gmap.map, gmap.markers, {
         imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'

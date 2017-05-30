@@ -263,7 +263,8 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
     // Trigger onLoad
     gmap.$map.trigger('onLoad');
 
-    console.log( gmap.map );
+    // Centering
+    gmap.setCenter();
 
     // Clustering
     if ( gmap.clustering ){
