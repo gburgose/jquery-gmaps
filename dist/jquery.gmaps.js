@@ -15,31 +15,37 @@
     function Gmaps(element, settings, index) {
       var gmap = this,
         dataSettings;
-      var index = index;
+      gmap.$map = $(element);
       gmap.index = index;
       gmap.id = 'jquery-gmaps-' + index;
-      gmap.url = "https://maps.googleapis.com/maps/api/js";
-      gmap.key = gmap._getKey(element);
-      gmap.zoom = gmap._getZoom(element);
-      gmap.clustering = gmap._getClustering(element);
-      gmap.lang = gmap._getLanguage();
-      gmap.locations = gmap._getLocations(element);
-      gmap.$map = $(element);
-      gmap.style = gmap._getStyle(settings);
+      gmap.$map.addClass('googlemap')
+        .addClass('googlemap-load');
       gmap.map = null;
       gmap.markers = [];
       gmap.bounds = null;
       gmap.infowindows = [];
-      $(element).addClass('googlemap');
+      gmap.url = "https://maps.googleapis.com/maps/api/js";
+      gmap.key = gmap.getMapKey(element);
+      gmap.zoom = gmap.getMapZoom(element);
+      gmap.clustering = gmap.getMapClustering(element);
+      gmap.lang = gmap.getMapLanguage();
+      gmap.locations = gmap.getMapLocations(element);
+      gmap.style = gmap.getMapStyle(settings);
+      gmap.zoomControl = gmap.getMapZoomControl(element);
+      gmap.typeControl = gmap.getMapTypeControl(element);
+      gmap.scaleControl = gmap.getMapScaleControl(element);
+      gmap.streetViewControl = gmap.getMapStreetViewControl(element);
+      gmap.rotateControl = gmap.getMapRotateControl(element);
+      gmap.fullscreenControl = gmap.getMapFullscreenControl(element);
       var googlemap = document.createElement('div')
       $(googlemap).addClass('googlemap-overview');
       $(googlemap).addClass(gmap.id);
       $(element).prepend($(googlemap));
-      gmap.script(true);
+      gmap._scripts();
     }
     return Gmaps;
   }());
-  Gmaps.prototype.script = function(creation) {
+  Gmaps.prototype._scripts = function() {
     var gmap = this;
     if (gmap.index == 0) {
       var _api = gmap.url;
@@ -69,31 +75,11 @@
     var loading = setInterval(function() {
       if (window.google !== undefined) {
         window.clearInterval(loading);
-        gmap.create();
+        gmap.mapInit();
       }
-    }, 100);
+    }, 200);
   };
-  Gmaps.prototype._getStyle = function(settings) {
-    try {
-      return settings.style;
-    } catch (err) {
-      return false;
-    }
-  };
-  Gmaps.prototype._getKey = function(element) {
-    var gmap = this;
-    var _key = $(element).attr('data-key');
-    return _key;
-  };
-  Gmaps.prototype._getZoom = function(element) {
-    var gmap = this;
-    var _zoom = $(element).attr('data-zoom');
-    if (_zoom === undefined || _zoom === "") {
-      _zoom = 4;
-    }
-    return parseInt(_zoom);
-  };
-  Gmaps.prototype._getLanguage = function() {
+  Gmaps.prototype.getMapLanguage = function() {
     var gmap = this;
     var $html = $('html');
     var _lang = $html.attr('lang');
@@ -102,7 +88,75 @@
     }
     return _lang;
   };
-  Gmaps.prototype._getClustering = function(element) {
+  Gmaps.prototype.getMapStyle = function(settings) {
+    try {
+      return settings.style;
+    } catch (err) {
+      return false;
+    }
+  };
+  Gmaps.prototype.getMapKey = function(element) {
+    var gmap = this;
+    var _key = $(element).attr('data-key');
+    return _key;
+  };
+  Gmaps.prototype.getMapZoom = function(element) {
+    var gmap = this;
+    var _option = $(element).attr('data-zoom');
+    if (_option === undefined || _option === "") {
+      _option = 4;
+    }
+    return parseInt(_option);
+  };
+  Gmaps.prototype.getMapZoomControl = function(element) {
+    var gmap = this;
+    var _option = Boolean($(element).attr('data-zoom-control'));
+    if (_option === undefined || _option === "") {
+      _option = false;
+    }
+    return _option;
+  };
+  Gmaps.prototype.getMapTypeControl = function(element) {
+    var gmap = this;
+    var _option = Boolean($(element).attr('data-type-control'));
+    if (_option === undefined || _option === "") {
+      _option = false;
+    }
+    return _option;
+  };
+  Gmaps.prototype.getMapScaleControl = function(element) {
+    var gmap = this;
+    var _option = Boolean($(element).attr('data-type-control'));
+    if (_option === undefined || _option === "") {
+      _option = false;
+    }
+    return _option;
+  };
+  Gmaps.prototype.getMapStreetViewControl = function(element) {
+    var gmap = this;
+    var _option = Boolean($(element).attr('data-type-control'));
+    if (_option === undefined || _option === "") {
+      _option = false;
+    }
+    return _option;
+  };
+  Gmaps.prototype.getMapRotateControl = function(element) {
+    var gmap = this;
+    var _option = Boolean($(element).attr('data-type-control'));
+    if (_option === undefined || _option === "") {
+      _option = false;
+    }
+    return _option;
+  };
+  Gmaps.prototype.getMapFullscreenControl = function(element) {
+    var gmap = this;
+    var _option = Boolean($(element).attr('data-type-control'));
+    if (_option === undefined || _option === "") {
+      _option = false;
+    }
+    return _option;
+  };
+  Gmaps.prototype.getMapClustering = function(element) {
     var gmap = this;
     var _clustering = Boolean($(element).attr('data-clustering'))
     if (_clustering === undefined) {
@@ -110,47 +164,34 @@
     }
     return _clustering;
   };
-  Gmaps.prototype._getLocations = function(element) {
+  Gmaps.prototype.getMapLocations = function(element) {
     var gmap = this;
     var $locations = $(element).find('.marker');
     var locations = [];
     $locations.each(function(i, el) {
       var marker = {
+        'id': parseFloat($(el).attr('data-id')),
         'lat': parseFloat($(el).attr('data-lat')),
         'lng': parseFloat($(el).attr('data-lng')),
         'html': $(el).html(),
-        'icon': gmap._getIcon(el),
+        'icon': gmap.getMarkerIcon(el),
         'draggable': Boolean($(el).attr('data-draggable')),
       };
       locations.push(marker);
     });
     return locations;
   };
-  Gmaps.prototype._getIcon = function(element) {
-    var gmap = this;
-    var _image = $(element).attr('data-marker-image');
-    var _width = parseInt($(element).attr('data-marker-width'));
-    var _height = parseInt($(element).attr('data-marker-height'));
-    if (_image === undefined || !$.isNumeric(_width) || !$.isNumeric(_height)) {
-      return false;
-    }
-    var icon = {
-      url: _image,
-      width: _width,
-      height: _height
-    };
-    return icon;
-  }
-  Gmaps.prototype.create = function() {
+  Gmaps.prototype.mapInit = function() {
     var gmap = this;
     var $map = $("." + gmap.id);
     var options = {};
+    console.log(gmap.zoomControl);
     options.zoom = gmap.zoom;
-    options.zoomControl = true;
-    options.mapTypeControl = true;
-    options.scaleControl = true;
-    options.streetViewControl = true;
-    options.rotateControl = true;
+    options.zoomControl = gmap.zoomControl;
+    options.mapTypeControl = gmap.typeControl;
+    options.scaleControl = gmap.scaleControl;
+    options.streetViewControl = gmap.streetViewControl;
+    options.rotateControl = gmap.rotateControl;
     options.fullscreenControl = true;
     if (gmap.style !== false) {
       options.styles = gmap.style;
@@ -167,9 +208,25 @@
       });
     }
   };
+  Gmaps.prototype.getMarkerIcon = function(element) {
+    var gmap = this;
+    var _image = $(element).attr('data-marker-image');
+    var _width = parseInt($(element).attr('data-marker-width'));
+    var _height = parseInt($(element).attr('data-marker-height'));
+    if (_image === undefined || !$.isNumeric(_width) || !$.isNumeric(_height)) {
+      return false;
+    }
+    var icon = {
+      url: _image,
+      width: _width,
+      height: _height
+    };
+    return icon;
+  }
   Gmaps.prototype.addMarker = function(settings) {
     var gmap = this;
     var options = {};
+    options.id = settings.id
     options.position = new google.maps.LatLng(settings.lat, settings.lng);
     options.map = gmap.map;
     options.clickable = true;
@@ -196,7 +253,10 @@
       });
       infowindow.open(gmap.map, marker);
       gmap.map.setCenter(this.getPosition());
-      gmap.$map.trigger('onMarkerClick');
+      var _position = {};
+      _position.lat = parseFloat(marker.getPosition().lat());
+      _position.lng = parseFloat(marker.getPosition().lng());
+      gmap.$map.trigger('onMarkerClick', [_position, settings.id]);
     });
     gmap.map.setCenter(options.position);
   }
@@ -213,6 +273,8 @@
       gmap.map.fitBounds(bounds);
     }
   }
+  Gmaps.prototype.reload = function() {};
+  Gmaps.prototype.destroy = function() {};
   $.fn.gmaps = function() {
     var _gmaps = this;
     var _opt = arguments[0];

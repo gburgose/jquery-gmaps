@@ -50,7 +50,8 @@
           console.log("load maps");
         });
 
-        $('.gmaps').on('onMarkerClick',function(){
+        $('.gmaps').on('onMarkerClick',function( event, position, id ){
+          console.log( position, id );
           console.log("open infowindow");
         });
 

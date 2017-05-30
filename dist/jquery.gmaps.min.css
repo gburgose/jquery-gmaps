@@ -1,1 +1,1 @@
-.googlemap{position:relative}.googlemap .marker{display:none;visibility:hidden;width:1px;height:1px}.googlemap-overview{position:absolute;width:100%;height:100%;top:0;left:0}
+.gmaps{overflow:hidden}.gmaps .marker{visibility:hidden}.googlemap{position:relative}.googlemap .googlemap-overview{position:absolute;width:100%;height:100%;top:0;left:0;visibility:hidden;opacity:0}.googlemap.googlemap-load .googlemap-overview{visibility:visible;animation:fadeIn .5s .5s ease-in-out both}@keyframes fadeIn{from{opacity:0}to{opacity:1}}

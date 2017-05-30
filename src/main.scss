@@ -1,18 +1,54 @@
+/*
+|--------------------------------------------------------------------------
+| Init
+|--------------------------------------------------------------------------
+*/
+
+.gmaps{
+  overflow: hidden;
+  .marker{
+    visibility: hidden;
+  }
+}
+
+/*
+|--------------------------------------------------------------------------
+| Custom
+|--------------------------------------------------------------------------
+*/
+
 .googlemap{
+  
   position: relative;
+
+  .googlemap-overview{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    visibility: hidden;
+    opacity: 0;
+  }
+
+  &.googlemap-load .googlemap-overview{
+    visibility: visible;
+    animation: fadeIn .5s .5s ease-in-out both;
+  }
+
 }
 
-.googlemap .marker{
-  display: none;
-  visibility: hidden;
-  width: 1px;
-  height: 1px;
-}
+/*
+|--------------------------------------------------------------------------
+| Animations
+|--------------------------------------------------------------------------
+*/
 
-.googlemap-overview{
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
