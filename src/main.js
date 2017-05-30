@@ -300,7 +300,7 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
     options.scaleControl = gmap.scaleControl;
     options.streetViewControl = gmap.streetViewControl;
     options.rotateControl = gmap.rotateControl;
-    options.fullscreenControl = true;
+    options.fullscreenControl = gmap.fullscreenControl;
     
     /*
     options.draggable = false;
@@ -343,8 +343,6 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
   */
 
   Gmaps.prototype.getMarkerIcon = function( element ){
-
-    var gmap = this;
 
     var _image = $(element).attr('data-marker-image');
     var _width = parseInt( $(element).attr('data-marker-width') );

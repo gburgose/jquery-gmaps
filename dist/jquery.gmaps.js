@@ -192,7 +192,7 @@
     options.scaleControl = gmap.scaleControl;
     options.streetViewControl = gmap.streetViewControl;
     options.rotateControl = gmap.rotateControl;
-    options.fullscreenControl = true;
+    options.fullscreenControl = gmap.fullscreenControl;
     if (gmap.style !== false) {
       options.styles = gmap.style;
     }
@@ -209,7 +209,6 @@
     }
   };
   Gmaps.prototype.getMarkerIcon = function(element) {
-    var gmap = this;
     var _image = $(element).attr('data-marker-image');
     var _width = parseInt($(element).attr('data-marker-width'));
     var _height = parseInt($(element).attr('data-marker-height'));
