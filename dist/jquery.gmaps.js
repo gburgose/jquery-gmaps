@@ -76,14 +76,16 @@
     _.zoom = _.getMapZoom(_.element);
     _.clustering = _.getMapClustering(_.element);
     _.lang = _.getMapLanguage();
-    _.draggable = _.getMapDraggable(_.element);
     _.style = _.getMapStyle(_.settings);
-    _.zoomControl = _.getMapZoomControl(_.element);
-    _.typeControl = _.getMapTypeControl(_.element);
-    _.scaleControl = _.getMapScaleControl(_.element);
-    _.streetViewControl = _.getMapStreetViewControl(_.element);
-    _.rotateControl = _.getMapRotateControl(_.element);
-    _.fullscreenControl = _.getMapFullscreenControl(_.element);
+    _.controlZoom = _.getMapControlZoom(_.element);
+    _.controlType = _.getMapControlType(_.element);
+    _.controlScale = _.getMapControlScale(_.element);
+    _.controlStreetView = _.getMapControlStreetView(_.element);
+    _.controlRotate = _.getMapControlRotate(_.element);
+    _.controlFullscreen = _.getMapControlFullscreen(_.element);
+    _.eventDraggable = _.getMapEventDraggable(_.element);
+    _.eventDoubleClickZoom = _.getMapEventDoubleClickZoom(_.element);
+    _.eventMouseWheel = _.getMapEventMouseWheel(_.element);
     _.locations = _.getLocations(_.element);
   };
   Gmaps.prototype.getMapLanguage = function() {
@@ -93,13 +95,6 @@
       _setting = "en";
     }
     return _setting;
-  };
-  Gmaps.prototype.getMapStyle = function(settings) {
-    try {
-      return settings.style;
-    } catch (err) {
-      return false;
-    }
   };
   Gmaps.prototype.getMapKey = function(element) {
     var _attr = $(element).attr('data-key');
@@ -114,69 +109,6 @@
     }
     return _attr;
   };
-  Gmaps.prototype.getMapZoomControl = function(element) {
-    var _attr = $(element).attr('data-control-zoom');
-    if (typeof _attr !== typeof "undefined") {
-      _attr = false;
-    } else {
-      _attr = Boolean(_attr);
-    }
-    return _attr;
-  };
-  Gmaps.prototype.getMapTypeControl = function(element) {
-    var _attr = $(element).attr('data-control-type');
-    if (typeof _attr !== typeof "undefined") {
-      _attr = false;
-    } else {
-      _attr = Boolean(_attr);
-    }
-    return _attr;
-  };
-  Gmaps.prototype.getMapScaleControl = function(element) {
-    var _attr = $(element).attr('data-control-scale');
-    if (typeof _attr !== typeof "undefined") {
-      _attr = false;
-    } else {
-      _attr = Boolean(_attr);
-    }
-    return _attr;
-  };
-  Gmaps.prototype.getMapStreetViewControl = function(element) {
-    var _attr = $(element).attr('data-control-streetview');
-    if (typeof _attr !== typeof "undefined") {
-      _attr = false;
-    } else {
-      _attr = Boolean(_attr);
-    }
-    return _attr;
-  };
-  Gmaps.prototype.getMapRotateControl = function(element) {
-    var _attr = $(element).attr('data-control-rotate');
-    if (typeof _attr !== typeof "undefined") {
-      _attr = false;
-    } else {
-      _attr = Boolean(_attr);
-    }
-    return _attr;
-  };
-  Gmaps.prototype.getMapFullscreenControl = function(element) {
-    var _attr = $(element).attr('data-control-fullscreen');
-    if (typeof _attr !== typeof "undefined") {
-      _attr = false;
-    } else {
-      _attr = Boolean(_attr);
-    }
-    return _attr;
-  };
-  Gmaps.prototype.getMapDraggable = function(element) {
-    var _attr = $(element).attr('data-draggable');
-    if (typeof _attr !== typeof "undefined") {
-      _attr = true;
-    } else {
-      _attr = Boolean(_attr);
-    }
-    return _attr;
-  };
   Gmaps.prototype.getMapClustering = function(element) {
     var _setting = Boolean($(element).attr('data-clustering'))
     if (_setting === undefined) {
@@ -184,19 +116,94 @@
     }
     return _setting;
   };
+  Gmaps.prototype.getMapControlZoom = function(element) {
+    var _ = this;
+    var _attr = $(element).attr('data-control-zoom');
+    return _.___getBoolean(_attr, false);
+  };
+  Gmaps.prototype.getMapControlType = function(element) {
+    var _ = this;
+    var _attr = $(element).attr('data-control-type');
+    return _.___getBoolean(_attr, false);
+  };
+  Gmaps.prototype.getMapControlScale = function(element) {
+    var _ = this;
+    var _attr = $(element).attr('data-control-scale');
+    return _.___getBoolean(_attr, false);
+  };
+  Gmaps.prototype.getMapControlStreetView = function(element) {
+    var _ = this;
+    var _attr = $(element).attr('data-control-streetview');
+    return _.___getBoolean(_attr, false);
+  };
+  Gmaps.prototype.getMapControlRotate = function(element) {
+    var _ = this;
+    var _attr = $(element).attr('data-control-rotate');
+    return _.___getBoolean(_attr, false);
+  };
+  Gmaps.prototype.getMapControlFullscreen = function(element) {
+    var _ = this;
+    var _attr = $(element).attr('data-control-fullscreen');
+    return _.___getBoolean(_attr, false);
+  };
+  Gmaps.prototype.getMapEventDraggable = function(element) {
+    var _ = this;
+    var _attr = $(element).attr('data-draggable');
+    return _.___getBoolean(_attr, true);
+  };
+  Gmaps.prototype.getMapEventDoubleClickZoom = function(element) {
+    var _ = this;
+    var _attr = $(element).attr('data-doubleclick');
+    var _return = _.___getBoolean(_attr, true);
+    if (_return === false) {
+      _return = true;
+    } else {
+      _return = false;
+    }
+    return _return;
+  };
+  Gmaps.prototype.getMapEventMouseWheel = function(element) {
+    var _ = this;
+    var _attr = $(element).attr('data-draggable');
+    return _.___getBoolean(_attr, false);
+  };
+  Gmaps.prototype.getMapStyle = function(settings) {
+    try {
+      return settings.style;
+    } catch (err) {
+      return false;
+    }
+  };
+  Gmaps.prototype.getLocations = function(element) {
+    var _ = this;
+    var $locations = $(element).find('.marker');
+    var locations = [];
+    $locations.each(function(i, el) {
+      var marker = {
+        'id': parseFloat($(el).attr('data-id')),
+        'lat': parseFloat($(el).attr('data-lat')),
+        'lng': parseFloat($(el).attr('data-lng')),
+        'html': $(el).html(),
+        'icon': _.getMarkerIcon(el),
+        'draggable': _.getMarkerEventDraggable(el),
+      };
+      locations.push(marker);
+    });
+    return locations;
+  };
   Gmaps.prototype.mapInit = function() {
     var _ = this;
     var _opts = {};
     _opts.zoom = _.zoom;
-    _opts.zoomControl = _.zoomControl;
-    _opts.mapTypeControl = _.typeControl;
-    _opts.scaleControl = _.scaleControl;
-    _opts.streetViewControl = _.streetViewControl;
-    _opts.rotateControl = _.rotateControl;
-    _opts.fullscreenControl = _.fullscreenControl;
-    _opts.draggable = _.draggable;
-    _opts.disableDoubleClickZoom = false;
-    _opts.scrollwheel = false;
+    _opts.zoomControl = _.controlZoom;
+    _opts.mapTypeControl = _.controlType;
+    _opts.scaleControl = _.controlScale;
+    _opts.streetViewControl = _.controlStreetView;
+    _opts.rotateControl = _.controlRotate;
+    _opts.fullscreenControl = _.controlFullscreen;
+    _opts.draggable = _.eventDraggable;
+    _opts.disableDoubleClickZoom = _.eventDoubleClickZoom;
+    _opts.scrollwheel = _.eventMouseWheel;
     _.$map.addClass('googlemap')
       .addClass('googlemap-load');
     if (_.style !== false) {
@@ -215,24 +222,6 @@
       });
     }
   };
-  Gmaps.prototype.getLocations = function(element) {
-    var _ = this;
-    var $locations = $(element).find('.marker');
-    var locations = [];
-    $locations.each(function(i, el) {
-      var marker = {
-        'id': parseFloat($(el).attr('data-id')),
-        'lat': parseFloat($(el).attr('data-lat')),
-        'lng': parseFloat($(el).attr('data-lng')),
-        'html': $(el).html(),
-        'icon': _.getMarkerIcon(el),
-        'draggable': _.getMarkerDraggable(el),
-      };
-      locations.push(marker);
-    });
-    console.log(locations);
-    return locations;
-  };
   Gmaps.prototype.getMarkerIcon = function(element) {
     var _image = $(element).attr('data-marker-image');
     var _width = parseInt($(element).attr('data-marker-width'));
@@ -247,7 +236,7 @@
     };
     return icon;
   };
-  Gmaps.prototype.getMarkerDraggable = function(element) {
+  Gmaps.prototype.getMarkerEventDraggable = function(element) {
     var _setting = Boolean($(element).attr('data-draggable'));
     if (_setting === undefined || _setting === "") {
       _setting = false;
@@ -306,6 +295,24 @@
   }
   Gmaps.prototype.reload = function() {};
   Gmaps.prototype.destroy = function() {};
+  Gmaps.prototype.___getBoolean = function(_value, _default) {
+    var _ret = _default;
+    if (_value === "true") {
+      _ret = true;
+    } else if (_value === "false") {
+      _ret = false;
+    }
+    return _ret;
+  };
+  Gmaps.prototype.___slugify = function(_string) {
+    return text.toString()
+      .toLowerCase()
+      .replace(/\s+/g, '-')
+      .replace(/[^\w\-]+/g, '')
+      .replace(/\-\-+/g, '-')
+      .replace(/^-+/, '')
+      .replace(/-+$/, '');
+  };
   $.fn.gmaps = function() {
     var _gmaps = this;
     var _opt = arguments[0];
