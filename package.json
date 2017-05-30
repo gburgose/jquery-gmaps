@@ -1,6 +1,6 @@
 {
   "name": "jquery-gmaps",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Create google maps, quick and simple.",
   "main": "dist/jquery.gmaps.js",
   "engines": {
