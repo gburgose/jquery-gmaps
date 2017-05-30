@@ -178,14 +178,14 @@
     var _ = this;
     var $locations = $(element).find('.marker');
     var locations = [];
-    $locations.each(function(i, el) {
+    $locations.each(function(i, marker) {
       var marker = {
-        'id': parseFloat($(el).attr('data-id')),
-        'lat': parseFloat($(el).attr('data-lat')),
-        'lng': parseFloat($(el).attr('data-lng')),
-        'html': $(el).html(),
-        'icon': _.getMarkerIcon(el),
-        'draggable': _.getMarkerEventDraggable(el),
+        'id': _.getMarkerID(marker),
+        'lat': parseFloat($(marker).attr('data-lat')),
+        'lng': parseFloat($(marker).attr('data-lng')),
+        'html': $(marker).html(),
+        'icon': _.getMarkerIcon(marker),
+        'draggable': _.getMarkerEventDraggable(marker),
       };
       locations.push(marker);
     });
@@ -222,6 +222,16 @@
       });
     }
   };
+  Gmaps.prototype.getMarkerID = function(element) {
+    var _ = this;
+    var _attr = $(element).attr('data-id');
+    if (_attr === undefined) {
+      _attr = _.___id(10);
+    } else {
+      _attr = _.___slugify(_attr);
+    }
+    return "marker_" + _attr;
+  }
   Gmaps.prototype.getMarkerIcon = function(element) {
     var _image = $(element).attr('data-marker-image');
     var _width = parseInt($(element).attr('data-marker-width'));
@@ -305,13 +315,22 @@
     return _ret;
   };
   Gmaps.prototype.___slugify = function(_string) {
-    return text.toString()
+    return _string.toString()
       .toLowerCase()
       .replace(/\s+/g, '-')
       .replace(/[^\w\-]+/g, '')
       .replace(/\-\-+/g, '-')
       .replace(/^-+/, '')
       .replace(/-+$/, '');
+  };
+  Gmaps.prototype.___id = function(lenght) {
+    var charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var _return = '';
+    for (var i = 0; i < lenght; i++) {
+      var randomPoz = Math.floor(Math.random() * charset.length);
+      _return += charset.substring(randomPoz, randomPoz + 1);
+    }
+    return _return.toLowerCase();
   };
   $.fn.gmaps = function() {
     var _gmaps = this;
