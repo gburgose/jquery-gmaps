@@ -234,11 +234,11 @@
     var _ = this;
     var _attr = $(element).attr('data-id');
     if (_attr === undefined) {
-      _attr = _.___id(10);
+      _attr = _.___randomId(10);
     } else {
       _attr = _.___slugify(_attr);
     }
-    return "marker_" + _attr;
+    return _attr;
   }
   Gmaps.prototype.getMarkerIcon = function(element) {
     var _image = $(element).attr('data-marker-image');
@@ -298,6 +298,14 @@
     });
     gmap.map.setCenter(options.position);
   }
+  Gmaps.prototype.openMarker = function(id) {
+    var _ = this;
+    $.each(_.markers, function(index, marker) {
+      if (marker.id === id) {
+        new google.maps.event.trigger(marker, 'click');
+      }
+    });
+  };
   Gmaps.prototype.setCenter = function() {
     var gmap = this;
     var bounds = new google.maps.LatLngBounds();
@@ -335,12 +343,12 @@
       .replace(/^-+/, '')
       .replace(/-+$/, '');
   };
-  Gmaps.prototype.___id = function(lenght) {
+  Gmaps.prototype.___randomId = function(lenght) {
     var charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     var _return = '';
     for (var i = 0; i < lenght; i++) {
-      var randomPoz = Math.floor(Math.random() * charset.length);
-      _return += charset.substring(randomPoz, randomPoz + 1);
+      var _rnd = Math.floor(Math.random() * charset.length);
+      _return += charset.substring(_rnd, _rnd + 1);
     }
     return _return.toLowerCase();
   };

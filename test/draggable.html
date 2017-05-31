@@ -20,7 +20,8 @@
     <div data-key="AIzaSyAiKl_QPZ8L92aLRfpH23F5jzEuIETEhWw"
       data-zoom="14"
       role="map"
-      class="gmaps">
+      class="gmaps"
+      id="my-map">
         
         <div
           data-id="1"
@@ -43,7 +44,14 @@
 
     <script>
       $(document).ready(function(){
-        $('.gmaps').gmaps();
+        
+        $('#my-map').gmaps();
+
+        $('#my-map').on('onMarkerClick',function( event, position, id ){
+          console.log( position, id );
+          console.log("open infowindow");
+        });
+
       });
     </script>
 
