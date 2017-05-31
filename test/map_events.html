@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Gmaps - Controls</title>
+  <title>Gmaps - Events</title>
   <link rel="stylesheet" href="../dist/jquery.gmaps.css">
   
   <style>
@@ -16,21 +16,20 @@
 
 </head>
 <body>
+
+    <h1>Map Events</h1>
     
     <div class="gmaps" role="map" 
       data-key="AIzaSyAiKl_QPZ8L92aLRfpH23F5jzEuIETEhWw"
       
-      data-control-zoom="true"
-      data-control-type="true"
-      data-control-scale="true"
-      data-control-streetview="false"
-      data-control-rotate="true"
-      data-control-fullscreen="true"
+      data-event-draggable="true"
+      data-event-doubleclick="true"
+      data-event-mousewheel="false"
 
       data-zoom="14">
         
         <div
-          data-id="1"
+          
           data-lat="-33.4727092"
           data-lng="-70.7699143" 
           class="marker">

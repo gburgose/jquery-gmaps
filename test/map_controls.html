@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Gmaps - Draggable</title>
+  <title>Gmaps - Controls</title>
   <link rel="stylesheet" href="../dist/jquery.gmaps.css">
   
   <style>
@@ -16,18 +16,25 @@
 
 </head>
 <body>
+
+    <h1>Map Controls</h1>
     
-    <div data-key="AIzaSyAiKl_QPZ8L92aLRfpH23F5jzEuIETEhWw"
-      data-zoom="14"
-      role="map"
-      class="gmaps"
-      id="my-map">
+    <div class="gmaps" role="map" 
+      data-key="AIzaSyAiKl_QPZ8L92aLRfpH23F5jzEuIETEhWw"
+      
+      data-control-zoom="true"
+      data-control-type="true"
+      data-control-scale="true"
+      data-control-streetview="false"
+      data-control-rotate="true"
+      data-control-fullscreen="true"
+
+      data-zoom="14">
         
         <div
           data-id="1"
           data-lat="-33.4727092"
-          data-lng="-70.7699143"
-          data-draggable="true"
+          data-lng="-70.7699143" 
           class="marker">
           <div class="map-card">
             <h1>This is my title</h1>
@@ -44,14 +51,7 @@
 
     <script>
       $(document).ready(function(){
-        
-        $('#my-map').gmaps();
-
-        $('#my-map').on('onMarkerClick',function( event, position, id ){
-          console.log( position, id );
-          console.log("open infowindow");
-        });
-
+        $('.gmaps').gmaps();
       });
     </script>
 
