@@ -2,6 +2,10 @@
 
 [![npm version](https://badge.fury.io/js/jquery-gmaps.svg)](https://badge.fury.io/js/jquery-gmaps)
 
+### Test on
+
+Laravel Mix: 0.12.1
+
 ### What is jquery gMaps?
 
 jQuery gMaps is intended to reduce the time of frontend development. You can create maps customized with html attributes and some lines of javascript.
