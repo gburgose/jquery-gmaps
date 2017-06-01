@@ -1,6 +1,6 @@
 # jQuery Google Maps
 
-![npm version](https://badge.fury.io/js/jquery-gmaps.svg)](https://badge.fury.io/js/jquery-gmaps)
+!npm version](https://badge.fury.io/js/jquery-gmaps.svg)](https://badge.fury.io/js/jquery-gmaps)
 
 ### What is jquery gMaps?
 
