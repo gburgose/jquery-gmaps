@@ -190,8 +190,8 @@
     $locations.each(function(i, marker) {
       var marker = {
         'id': _.getMarkerID(marker),
-        'lat': parseFloat($(marker).attr('data-lat')),
-        'lng': parseFloat($(marker).attr('data-lng')),
+        'lat': $(marker).attr('data-lat'),
+        'lng': $(marker).attr('data-lng'),
         'html': $(marker).html(),
         'icon': _.getMarkerIcon(marker),
         'draggable': _.getMarkerEventDraggable(marker),
@@ -256,6 +256,13 @@
   };
   Gmaps.prototype.getMarkerEventDraggable = function(element) {
     var _setting = Boolean($(element).attr('data-draggable'));
+    if (_setting === undefined || _setting === "") {
+      _setting = false;
+    }
+    return _setting;
+  };
+  Gmaps.prototype.getMarkerEventClickeable = function(element) {
+    var _setting = Boolean($(element).attr('data-clickeable'));
     if (_setting === undefined || _setting === "") {
       _setting = false;
     }
