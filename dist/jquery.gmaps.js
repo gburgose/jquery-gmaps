@@ -1,3 +1,12 @@
+/**
+  | . |     | .'| . |_ -|
+|_  |_|_|_|__,|  _|___|
+|___|         |_|      
+Author: Gabriel Burgos
+Website: http://gabrielburgos.cl
+Repo: https://github.com/gburgose/jquery-gmaps
+Issues: https://github.com/gburgose/jquery-gmaps/issues
+*/
 (function($) {
   'use strict';
   var Gmaps = window.Gmaps || {};
@@ -10,13 +19,24 @@
       _.$map = $(element);
       _.index = index;
       _.id = 'jquery-gmaps-' + index;
+      _.map = null;
+      _.markers = [];
+      _.bounds = null;
+      _.infowindows = [];
+      _.config = []
+      _.config.map = []
+      _.config.map.api = []
+      _.config.map.options = []
+      _.config.map.controls = []
+      _.config.map.events = []
+      _.locations = _.getLocations(_.element);
       _._init(_.element);
     }
     return Gmaps;
   }());
   Gmaps.prototype._init = function(element) {
     var _ = this;
-    _.getMapSettings();
+    _._getMapConfiguration();
     _._canvas(element);
     _._scripts();
   }
@@ -32,14 +52,11 @@
     return _.$canvas = $(_googlemap);
   };
   Gmaps.prototype._scripts = function() {
-    var gmap = this;
+    var _ = this;
     if ($('#gmaps-api').length === 0) {
       var _api = "//maps.googleapis.com/maps/api/js";
-      if (gmap.key) {
-        _api += '?key=' + gmap.key;
-      } else {
-        return false;
-      }
+      _api += '?key=' + _.config.map.api.key;
+      _api += '&language=' + _.config.map.api.lang;
       var api = document.createElement('script');
       api.type = 'text/javascript';
       api.src = _api;
@@ -47,7 +64,7 @@
       api.async = true;
       api.defer = true;
       document.body.appendChild(api);
-      if (gmap.clustering) {
+      if (_.config.map.options.clustering) {
         var _clustering = "//developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js";
         var clustering = document.createElement('script');
         clustering.type = 'text/javascript';
@@ -61,96 +78,274 @@
     var loading = setInterval(function() {
       if (window.google !== undefined) {
         window.clearInterval(loading);
-        gmap.mapInit();
+        _.mapInit();
       }
     }, 200);
   };
-  Gmaps.prototype.getMapSettings = function() {
+  Gmaps.prototype._getMapConfiguration = function() {
     var _ = this;
-    _.map = null;
-    _.markers = [];
-    _.bounds = null;
-    _.infowindows = [];
-    _.key = _.getMapKey(_.element);
-    _.zoom = _.getMapZoom(_.element);
-    _.clustering = _.getMapClustering(_.element);
-    _.lang = _.getMapLanguage();
-    _.style = _.getMapStyle(_.settings);
-    _.controlZoom = _.getMapControlZoom(_.element);
-    _.controlType = _.getMapControlType(_.element);
-    _.controlScale = _.getMapControlScale(_.element);
-    _.controlStreetView = _.getMapControlStreetView(_.element);
-    _.controlRotate = _.getMapControlRotate(_.element);
-    _.controlFullscreen = _.getMapControlFullscreen(_.element);
-    _.eventDraggable = _.getMapEventDraggable(_.element);
-    _.eventDoubleClickZoom = _.getMapEventDoubleClickZoom(_.element);
-    _.eventMouseWheel = _.getMapEventMouseWheel(_.element);
-    _.locations = _.getLocations(_.element);
+    _.config.map.style = _._getMapStyle(_.settings);
+    _.config.map.api.key = _._getMapApiKey(undefined);
+    _.config.map.api.lang = _._getMapApiLanguage("en");
+    _.config.map.options.zoom = _._getMapOptionZoom(4);
+    _.config.map.options.zoom_min = _._getMapOptionZoomMin(1);
+    _.config.map.options.zoom_max = _._getMapOptionZoomMax(16);
+    _.config.map.options.type = _._getMapOptionType('roadmap');
+    _.config.map.options.clustering = _._getMapOptionClustering(false);
+    _.config.map.controls.zoom = _._getMapControlZoom(false);
+    _.config.map.controls.type = _._getMapControlType(false);
+    _.config.map.controls.scale = _._getMapControlScale(false);
+    _.config.map.controls.streetView = _._getMapControlStreetView(false);
+    _.controlRotate = _._getMapControlRotate(_.element);
+    _.controlFullscreen = _._getMapControlFullscreen(_.element);
+    _.eventDraggable = _._getMapEventDraggable(_.element);
+    _.eventDoubleClickZoom = _._getMapEventDoubleClickZoom(_.element);
+    _.eventMouseWheel = _._getMapEventMouseWheel(_.element);
   };
-  Gmaps.prototype.getMapLanguage = function() {
-    var $html = $('html');
-    var _setting = $html.attr('lang');
-    if (_setting === undefined || _setting === "") {
-      _setting = "en";
-    }
-    return _setting;
-  };
-  Gmaps.prototype.getMapKey = function(element) {
-    var _attr = $(element).attr('data-key');
-    return _attr;
-  };
-  Gmaps.prototype.getMapZoom = function(element) {
-    var _attr = $(element).attr('data-zoom');
-    if (typeof _attr !== typeof "undefined") {
-      _attr = 4;
+  /**
+    Return google maps api key
+    @request {string} [key=AIzaSyAiKl_QPZ8L92aLRfpH23F5jzEuIETEhWw]
+  */
+  Gmaps.prototype._getMapApiKey = function(_default) {
+    var _ = this,
+      _return,
+      _by__default = _default,
+      _by_setting = null,
+      _by_attr = _.$map.attr("data-key");
+    try {
+      _by_setting = _.settings.api.key;
+    } catch (e) {}
+    if (typeof _by_attr === "string") {
+      _return = _by_attr;
+    } else if (typeof _by_setting === "string") {
+      _return = _.settings.api.key;
     } else {
-      _attr = parseInt(_attr);
+      _return = _by__default;
     }
-    return _attr;
+    return _return;
   };
-  Gmaps.prototype.getMapClustering = function(element) {
-    var _setting = Boolean($(element).attr('data-clustering'))
-    if (_setting === undefined) {
-      _setting = false;
+  /**
+    Return map language
+    @request {string} [lang=es]
+  */
+  Gmaps.prototype._getMapApiLanguage = function(_default) {
+    var _ = this,
+      _return,
+      _by__default = _default,
+      _by_setting = null,
+      _by_attr = _.$map.attr("data-lang"),
+      _by_html = $('html').attr("lang");
+    try {
+      _by_setting = _.settings.api.lang;
+    } catch (e) {}
+    if (typeof _by_attr === "string") {
+      _return = _by_attr;
+    } else if (typeof _by_setting === "string") {
+      _return = _.settings.api.lang;
+    } else if (typeof _by_html === "string") {
+      _return = _by_html;
+    } else {
+      _return = _by__default;
     }
-    return _setting;
+    return _return;
   };
-  Gmaps.prototype.getMapControlZoom = function(element) {
+  /**
+    Return map zoom
+    @request {integer} [zoom=4]
+  */
+  Gmaps.prototype._getMapOptionZoom = function(_default) {
+    var _ = this,
+      _return,
+      _by__default = _default,
+      _by_setting = null,
+      _by_attr = parseInt(_.$map.attr("data-zoom"));
+    try {
+      _by_setting = parseInt(_.settings.map.zoom);
+    } catch (e) {}
+    if (typeof _by_attr === "number" && _by_attr > 0) {
+      _return = _by_attr;
+    } else if (typeof _by_setting === "number" && _by_setting > 0) {
+      _return = _.settings.map.zoom;
+    } else {
+      _return = _by__default;
+    }
+    if (_return <= 0 || _return >= 17) {
+      _return = _by__default;
+    }
+    return _return;
+  };
+  /**
+    Return map zoom min
+    @request {integer} [zoom=1]
+  */
+  Gmaps.prototype._getMapOptionZoomMin = function(_default) {
     var _ = this;
-    var _attr = $(element).attr('data-control-zoom');
-    return _.___getBoolean(_attr, false);
+    var _return,
+      _by__default = _default,
+      _by_setting = null,
+      _by_attr = parseInt(_.$map.attr("data-zoom-min"));
+    try {
+      _by_setting = parseInt(_.settings.map.zoom_min);
+    } catch (e) {}
+    if (typeof _by_attr === "number" && _by_attr > 0) {
+      _return = _by_attr;
+    } else if (typeof _by_setting === "number" && _by_setting > 0) {
+      _return = _.settings.map.zoom;
+    } else {
+      _return = _by__default;
+    }
+    if (_return <= 0 || _return >= 17) {
+      _return = _by__default;
+    }
+    return _return;
   };
-  Gmaps.prototype.getMapControlType = function(element) {
-    var _ = this;
-    var _attr = $(element).attr('data-control-type');
-    return _.___getBoolean(_attr, false);
+  /**
+    Return map zoom max
+    @request {integer} [zoom-max=1]
+  */
+  Gmaps.prototype._getMapOptionZoomMax = function(_default) {
+    var _ = this,
+      _return,
+      _by__default = _default,
+      _by_setting = null,
+      _by_attr = parseInt(_.$map.attr("data-zoom-max"));
+    try {
+      _by_setting = parseInt(_.settings.map.zoom_max);
+    } catch (e) {}
+    if (typeof _by_attr === "number" && _by_attr > 0) {
+      _return = _by_attr;
+    } else if (typeof _by_setting === "number" && _by_setting > 0) {
+      _return = _.settings.map.zoom;
+    } else {
+      _return = _by__default;
+    }
+    if (_return <= 0 || _return >= 17) {
+      _return = _by__default;
+    }
+    return _return;
   };
-  Gmaps.prototype.getMapControlScale = function(element) {
-    var _ = this;
-    var _attr = $(element).attr('data-control-scale');
-    return _.___getBoolean(_attr, false);
+  /**
+    Return map type
+    @request {string} [type='roadmap' || 'satellite' || 'hybrid' || 'terrain' ]
+  */
+  Gmaps.prototype._getMapOptionType = function(_default) {
+    var _ = this,
+      _return,
+      _by_default = _default,
+      _by_setting = null,
+      _by_attr = _.$map.attr("data-type");
+    try {
+      _by_setting = parseInt(_.settings.map.type);
+    } catch (e) {}
+    if (typeof _by_attr === "string" && typeof _by_attr !== "undefined") {
+      _return = _by_attr;
+    } else if (typeof _by_setting === "string" && typeof _by_setting !== "undefined") {
+      _return = _.settings.map.zoom;
+    } else {
+      _return = _by_default;
+    }
+    if (_return !== "roadmap" || _return !== "satellite" || _return !== "hybrid" || _return !== "terrain") {
+      _return = _default;
+    }
+    return _return;
   };
-  Gmaps.prototype.getMapControlStreetView = function(element) {
+  /**
+    Return if the map set clustering
+    @request {Boolean} [clustering=false]
+  */
+  Gmaps.prototype._getMapOptionClustering = function(_default) {
+    var _ = this,
+      _return,
+      _by_default = _default,
+      _by_setting = null,
+      _by_attr = _.$map.attr("data-clustering");
+    try {
+      _by_setting = parseInt(_.settings.map.clustering);
+    } catch (e) {}
+    if (typeof _by_attr === "boolean" && (typeof _by_attr !== "true" || typeof _by_attr !== "false")) {
+      _return = _by_attr;
+    } else if (typeof _by_setting === "boolean" && (typeof _by_setting !== "true" || typeof _by_setting !== "false")) {
+      _return = _.settings.map.clustering;
+    } else {
+      _return = _by_default;
+    }
+    return _return;
+  };
+  Gmaps.prototype._getMapControlZoom = function(_default) {
+    var _ = this,
+      _return,
+      _by_default = _default,
+      _by_setting = null,
+      _by_attr = _.$map.attr("data-control-zoom");
+    try {
+      _by_setting = parseInt(_.settings.control.zoom);
+    } catch (e) {}
+    if (typeof _by_attr === "boolean" && (typeof _by_attr !== "true" || typeof _by_attr !== "false")) {
+      _return = _by_attr;
+    } else if (typeof _by_setting === "boolean" && (typeof _by_setting !== "true" || typeof _by_setting !== "false")) {
+      _return = _.settings.control.zoom;
+    } else {
+      _return = _by_default;
+    }
+    return _return;
+  };
+  Gmaps.prototype._getMapControlType = function(_default) {
+    var _ = this,
+      _return,
+      _by_default = _default,
+      _by_setting = null,
+      _by_attr = _.$map.attr("data-control-type");
+    try {
+      _by_setting = parseInt(_.settings.control.type);
+    } catch (e) {}
+    if (typeof _by_attr === "boolean" && (typeof _by_attr !== "true" || typeof _by_attr !== "false")) {
+      _return = _by_attr;
+    } else if (typeof _by_setting === "boolean" && (typeof _by_setting !== "true" || typeof _by_setting !== "false")) {
+      _return = _.settings.control.type;
+    } else {
+      _return = _by_default;
+    }
+    return _return;
+  };
+  Gmaps.prototype._getMapControlScale = function(_default) {
+    var _ = this,
+      _return,
+      _by_default = _default,
+      _by_setting = null,
+      _by_attr = _.$map.attr("data-control-scale");
+    try {
+      _by_setting = parseInt(_.settings.control.scale);
+    } catch (e) {}
+    if (typeof _by_attr === "boolean" && (typeof _by_attr !== "true" || typeof _by_attr !== "false")) {
+      _return = _by_attr;
+    } else if (typeof _by_setting === "boolean" && (typeof _by_setting !== "true" || typeof _by_setting !== "false")) {
+      _return = _.settings.control.scale;
+    } else {
+      _return = _by_default;
+    }
+    return _return;
+  };
+  Gmaps.prototype._getMapControlStreetView = function(element) {
     var _ = this;
     var _attr = $(element).attr('data-control-streetview');
     return _.___getBoolean(_attr, false);
   };
-  Gmaps.prototype.getMapControlRotate = function(element) {
+  Gmaps.prototype._getMapControlRotate = function(element) {
     var _ = this;
     var _attr = $(element).attr('data-control-rotate');
     return _.___getBoolean(_attr, false);
   };
-  Gmaps.prototype.getMapControlFullscreen = function(element) {
+  Gmaps.prototype._getMapControlFullscreen = function(element) {
     var _ = this;
     var _attr = $(element).attr('data-control-fullscreen');
     return _.___getBoolean(_attr, false);
   };
-  Gmaps.prototype.getMapEventDraggable = function(element) {
+  Gmaps.prototype._getMapEventDraggable = function(element) {
     var _ = this;
     var _attr = $(element).attr('data-event-draggable');
     return _.___getBoolean(_attr, true);
   };
-  Gmaps.prototype.getMapEventDoubleClickZoom = function(element) {
+  Gmaps.prototype._getMapEventDoubleClickZoom = function(element) {
     var _ = this;
     var _attr = $(element).attr('data-event-doubleclick');
     var _return = _.___getBoolean(_attr, true);
@@ -161,12 +356,12 @@
     }
     return _return;
   };
-  Gmaps.prototype.getMapEventMouseWheel = function(element) {
+  Gmaps.prototype._getMapEventMouseWheel = function(element) {
     var _ = this;
     var _attr = $(element).attr('data-event-mousewheel');
     return _.___getBoolean(_attr, false);
   };
-  Gmaps.prototype.getMapStyle = function(settings) {
+  Gmaps.prototype._getMapStyle = function(settings) {
     try {
       return settings.style;
     } catch (err) {
@@ -193,20 +388,24 @@
   Gmaps.prototype.mapInit = function() {
     var _ = this;
     var _opts = {};
-    _opts.zoom = _.zoom;
-    _opts.zoomControl = _.controlZoom;
-    _opts.mapTypeControl = _.controlType;
-    _opts.scaleControl = _.controlScale;
-    _opts.streetViewControl = _.controlStreetView;
+    _opts.zoom = _.config.map.options.zoom;
+    _opts.minZoom = _.config.map.options.zoom_min;
+    _opts.maxZoom = _.config.map.options.zoom_max;
+    _opts.mapTypeId = _.config.map.options.type;
+    _opts.zoomControl = _.config.map.controls.zoom;
+    _opts.mapTypeControl = _.config.map.controls.type;
+    _opts.scaleControl = _.config.map.controls.scale;
+    _opts.streetViewControl = _.config.map.controls.streetView;
     _opts.rotateControl = _.controlRotate;
     _opts.fullscreenControl = _.controlFullscreen;
     _opts.draggable = _.eventDraggable;
     _opts.disableDoubleClickZoom = _.eventDoubleClickZoom;
     _opts.scrollwheel = _.eventMouseWheel;
+    console.log(_);
     _.$map.addClass('googlemap')
       .addClass('googlemap-load');
-    if (_.style !== false) {
-      _opts.styles = _.style;
+    if (_.config.map.style !== false) {
+      _opts.styles = _.config.map.style;
     }
     _.map = new google.maps.Map(_.$canvas.get(0), _opts);
     $.each(_.locations, function(index, value) {
@@ -214,7 +413,7 @@
     });
     _.$map.trigger('onLoad');
     _.setCenter();
-    if (_.clustering) {
+    if (_.config.map.options.clustering) {
       var markerCluster = new MarkerClusterer(_.map, _.markers, {
         imagePath: '//developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'
       });
@@ -322,8 +521,8 @@
   };
   Gmaps.prototype.destroy = function() {
   };
-  Gmaps.prototype.___getBoolean = function(_value, _default) {
-    var _ret = _default;
+  Gmaps.prototype.___getBoolean = function(_value, __default) {
+    var _ret = __default;
     if (_value === "true") {
       _ret = true;
     } else if (_value === "false") {

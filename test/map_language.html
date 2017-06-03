@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Gmaps - Language</title>
+  <link rel="stylesheet" href="../dist/jquery.gmaps.css">
+  
+  <style>
+    .gmaps {
+      height: 400px;
+      width: 100%;
+      background-color: #f0f0f0;
+      margin-bottom: 10px;
+    }
+  </style>
+
+</head>
+<body>
+
+    <h1>Map Language</h1>
+    
+    <div class="gmaps"
+      id="map"
+
+      role="map">
+        
+        <div
+          data-id="chile"
+          data-lat="-35.675147"
+          data-lng="-71.542969" 
+          class="marker">
+          <div class="map-card">
+            <h1>This is my title</h1>
+            <p>Address: Fake street, #445, Stgo.</p>
+            <p>Phone: +56753223344</p>
+            <p>e-Mail: fake@email.com</p>
+          </div>
+        </div>
+
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="../dist/jquery.gmaps.js"></script>
+
+    <script>
+      $(document).ready(function(){
+        
+        // INIT
+        $('#map').gmaps({
+          api : {
+            key: "AIzaSyAiKl_QPZ8L92aLRfpH23F5jzEuIETEhWw",
+            lang : "es"
+          }
+        });
+
+        $('#map').on('onLoad',function(){
+          console.log("load maps");
+        });
+
+        $('#map').on('onMarkerClick',function( event, position, id ){
+          console.log( position, id );
+          console.log("open infowindow");
+        });
+
+      });
+    </script>
+
+  </body>
+</html>

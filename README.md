@@ -11,21 +11,21 @@ jQuery gMaps is intended to reduce the time of frontend development. You can cre
 #### npm
 
 ```
-npm install jquery-gmaps --save-dev
+  npm install jquery-gmaps --save-dev
 ```
 
 #### Webpack
 
 ```js
-require('jquery-gmaps');
+  require('jquery-gmaps');
 ```
 
 #### jQuery
 
 ```js
-$(document).ready(function(){
-  $('#map').gmaps();
-});
+  $(document).ready(function(){
+    $('#map').gmaps();
+  });
 ```
 
 #### HTML
