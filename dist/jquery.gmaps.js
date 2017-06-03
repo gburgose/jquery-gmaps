@@ -1,5 +1,5 @@
 /**
-  | . |     | .'| . |_ -|
+| . |     | .'| . |_ -|
 |_  |_|_|_|__,|  _|___|
 |___|         |_|      
 Author: Gabriel Burgos
@@ -23,12 +23,12 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
       _.markers = [];
       _.bounds = null;
       _.infowindows = [];
-      _.config = []
-      _.config.map = []
-      _.config.map.api = []
-      _.config.map.options = []
-      _.config.map.controls = []
-      _.config.map.events = []
+      _.properties = []
+      _.properties.map = []
+      _.properties.map.api = []
+      _.properties.map.option = []
+      _.properties.map.control = []
+      _.properties.map.event = []
       _.locations = _.getLocations(_.element);
       _._init(_.element);
     }
@@ -36,11 +36,11 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
   }());
   Gmaps.prototype._init = function(element) {
     var _ = this;
-    _._getMapConfiguration();
-    _._canvas(element);
+    _._getMapProperties();
+    _._canvas();
     _._scripts();
   }
-  Gmaps.prototype._canvas = function(element) {
+  Gmaps.prototype._canvas = function() {
     var _ = this;
     if (_.$map.find('.googlemap-overview').length > 0) {
       _.$map.find('.googlemap-overview').remove();
@@ -48,15 +48,15 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
     var _googlemap = document.createElement('div');
     $(_googlemap).addClass('googlemap-overview');
     $(_googlemap).addClass(_.id);
-    $(element).prepend($(_googlemap));
+    $(_.element).prepend($(_googlemap));
     return _.$canvas = $(_googlemap);
   };
   Gmaps.prototype._scripts = function() {
     var _ = this;
     if ($('#gmaps-api').length === 0) {
       var _api = "//maps.googleapis.com/maps/api/js";
-      _api += '?key=' + _.config.map.api.key;
-      _api += '&language=' + _.config.map.api.lang;
+      _api += '?key=' + _.properties.map.api.key;
+      _api += '&language=' + _.properties.map.api.lang;
       var api = document.createElement('script');
       api.type = 'text/javascript';
       api.src = _api;
@@ -64,7 +64,7 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
       api.async = true;
       api.defer = true;
       document.body.appendChild(api);
-      if (_.config.map.options.clustering) {
+      if (_.properties.map.option.clustering) {
         var _clustering = "//developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js";
         var clustering = document.createElement('script');
         clustering.type = 'text/javascript';
@@ -82,34 +82,35 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
       }
     }, 200);
   };
-  Gmaps.prototype._getMapConfiguration = function() {
+  Gmaps.prototype._getMapProperties = function() {
     var _ = this;
-    _.config.map.style = _._getMapStyle(_.settings);
-    _.config.map.api.key = _._getMapApiKey(undefined);
-    _.config.map.api.lang = _._getMapApiLanguage("en");
-    _.config.map.options.zoom = _._getMapOptionZoom(4);
-    _.config.map.options.zoom_min = _._getMapOptionZoomMin(1);
-    _.config.map.options.zoom_max = _._getMapOptionZoomMax(16);
-    _.config.map.options.type = _._getMapOptionType('roadmap');
-    _.config.map.options.clustering = _._getMapOptionClustering(false);
-    _.config.map.controls.zoom = _._getMapControlZoom(false);
-    _.config.map.controls.type = _._getMapControlType(false);
-    _.config.map.controls.scale = _._getMapControlScale(false);
-    _.config.map.controls.streetView = _._getMapControlStreetView(false);
-    _.controlRotate = _._getMapControlRotate(_.element);
-    _.controlFullscreen = _._getMapControlFullscreen(_.element);
-    _.eventDraggable = _._getMapEventDraggable(_.element);
-    _.eventDoubleClickZoom = _._getMapEventDoubleClickZoom(_.element);
-    _.eventMouseWheel = _._getMapEventMouseWheel(_.element);
+    _.properties.map.style = _._getMapStyle(_.settings);
+    _.properties.map.api.key = _._getMapApiKey(undefined);
+    _.properties.map.api.lang = _._getMapApiLanguage("en");
+    _.properties.map.option.zoom = _._getMapOptionZoom(4);
+    _.properties.map.option.zoom_min = _._getMapOptionZoomMin(1);
+    _.properties.map.option.zoom_max = _._getMapOptionZoomMax(16);
+    _.properties.map.option.type = _._getMapOptionType('roadmap');
+    _.properties.map.option.clustering = _._getMapOptionClustering(false);
+    _.properties.map.control.zoom = _._getMapControlZoom(false);
+    _.properties.map.control.type = _._getMapControlType(false);
+    _.properties.map.control.scale = _._getMapControlScale(false);
+    _.properties.map.control.streetview = _._getMapControlStreetView(false);
+    _.properties.map.control.rotate = _._getMapControlRotate(false);
+    _.properties.map.control.fullscreen = _._getMapControlFullscreen(false);
+    _.properties.map.event.draggable = _._getMapEventDraggable(true);
+    _.properties.map.event.dblclickZoom = _._getMapEventControlClickZoom(true);
+    _.properties.map.event.scrollwheel = _._getMapEventScrollWheel(false);
   };
   /**
     Return google maps api key
     @request {string} [key=AIzaSyAiKl_QPZ8L92aLRfpH23F5jzEuIETEhWw]
+    @returns {string}
   */
   Gmaps.prototype._getMapApiKey = function(_default) {
     var _ = this,
       _return,
-      _by__default = _default,
+      _by_default = _default,
       _by_setting = null,
       _by_attr = _.$map.attr("data-key");
     try {
@@ -120,18 +121,19 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
     } else if (typeof _by_setting === "string") {
       _return = _.settings.api.key;
     } else {
-      _return = _by__default;
+      _return = _by_default;
     }
     return _return;
   };
   /**
     Return map language
     @request {string} [lang=es]
+    @returns {string}
   */
   Gmaps.prototype._getMapApiLanguage = function(_default) {
     var _ = this,
       _return,
-      _by__default = _default,
+      _by_default = _default,
       _by_setting = null,
       _by_attr = _.$map.attr("data-lang"),
       _by_html = $('html').attr("lang");
@@ -145,18 +147,19 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
     } else if (typeof _by_html === "string") {
       _return = _by_html;
     } else {
-      _return = _by__default;
+      _return = _by_default;
     }
     return _return;
   };
   /**
     Return map zoom
     @request {integer} [zoom=4]
+    @returns {string}
   */
   Gmaps.prototype._getMapOptionZoom = function(_default) {
     var _ = this,
       _return,
-      _by__default = _default,
+      _by_default = _default,
       _by_setting = null,
       _by_attr = parseInt(_.$map.attr("data-zoom"));
     try {
@@ -167,21 +170,22 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
     } else if (typeof _by_setting === "number" && _by_setting > 0) {
       _return = _.settings.map.zoom;
     } else {
-      _return = _by__default;
+      _return = _by_default;
     }
-    if (_return <= 0 || _return >= 17) {
-      _return = _by__default;
+    if (_return > 0 && _return < 17) {
+      _return = _by_default;
     }
     return _return;
   };
   /**
     Return map zoom min
     @request {integer} [zoom=1]
+    @returns {integer}
   */
   Gmaps.prototype._getMapOptionZoomMin = function(_default) {
     var _ = this;
     var _return,
-      _by__default = _default,
+      _by_default = _default,
       _by_setting = null,
       _by_attr = parseInt(_.$map.attr("data-zoom-min"));
     try {
@@ -190,23 +194,24 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
     if (typeof _by_attr === "number" && _by_attr > 0) {
       _return = _by_attr;
     } else if (typeof _by_setting === "number" && _by_setting > 0) {
-      _return = _.settings.map.zoom;
+      _return = _by_setting;
     } else {
-      _return = _by__default;
+      _return = _by_default;
     }
-    if (_return <= 0 || _return >= 17) {
-      _return = _by__default;
+    if (_return > 0 && _return < 17) {
+      _return = _by_default;
     }
     return _return;
   };
   /**
     Return map zoom max
     @request {integer} [zoom-max=1]
+    @returns {integer}
   */
   Gmaps.prototype._getMapOptionZoomMax = function(_default) {
     var _ = this,
       _return,
-      _by__default = _default,
+      _by_default = _default,
       _by_setting = null,
       _by_attr = parseInt(_.$map.attr("data-zoom-max"));
     try {
@@ -215,18 +220,19 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
     if (typeof _by_attr === "number" && _by_attr > 0) {
       _return = _by_attr;
     } else if (typeof _by_setting === "number" && _by_setting > 0) {
-      _return = _.settings.map.zoom;
+      _return = _by_setting;
     } else {
-      _return = _by__default;
+      _return = _by_default;
     }
-    if (_return <= 0 || _return >= 17) {
-      _return = _by__default;
+    if (_return > 0 && _return < 17) {
+      _return = _by_default;
     }
     return _return;
   };
   /**
     Return map type
     @request {string} [type='roadmap' || 'satellite' || 'hybrid' || 'terrain' ]
+    @returns {string}
   */
   Gmaps.prototype._getMapOptionType = function(_default) {
     var _ = this,
@@ -235,12 +241,12 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
       _by_setting = null,
       _by_attr = _.$map.attr("data-type");
     try {
-      _by_setting = parseInt(_.settings.map.type);
+      _by_setting = _.settings.map.type;
     } catch (e) {}
     if (typeof _by_attr === "string" && typeof _by_attr !== "undefined") {
       _return = _by_attr;
     } else if (typeof _by_setting === "string" && typeof _by_setting !== "undefined") {
-      _return = _.settings.map.zoom;
+      _return = _by_setting;
     } else {
       _return = _by_default;
     }
@@ -251,7 +257,8 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
   };
   /**
     Return if the map set clustering
-    @request {Boolean} [clustering=false]
+    @request {boolean} [clustering=false]
+    @returns {boolean}
   */
   Gmaps.prototype._getMapOptionClustering = function(_default) {
     var _ = this,
@@ -260,17 +267,22 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
       _by_setting = null,
       _by_attr = _.$map.attr("data-clustering");
     try {
-      _by_setting = parseInt(_.settings.map.clustering);
+      _by_setting = _.settings.map.clustering;
     } catch (e) {}
     if (typeof _by_attr === "boolean" && (typeof _by_attr !== "true" || typeof _by_attr !== "false")) {
       _return = _by_attr;
     } else if (typeof _by_setting === "boolean" && (typeof _by_setting !== "true" || typeof _by_setting !== "false")) {
-      _return = _.settings.map.clustering;
+      _return = _by_setting;
     } else {
       _return = _by_default;
     }
     return _return;
   };
+  /**
+    Return if the map set control zoom
+    @request {boolean} [control-zoom=false]
+    @returns {boolean}
+  */
   Gmaps.prototype._getMapControlZoom = function(_default) {
     var _ = this,
       _return,
@@ -278,17 +290,22 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
       _by_setting = null,
       _by_attr = _.$map.attr("data-control-zoom");
     try {
-      _by_setting = parseInt(_.settings.control.zoom);
+      _by_setting = _.settings.control.zoom;
     } catch (e) {}
     if (typeof _by_attr === "boolean" && (typeof _by_attr !== "true" || typeof _by_attr !== "false")) {
       _return = _by_attr;
     } else if (typeof _by_setting === "boolean" && (typeof _by_setting !== "true" || typeof _by_setting !== "false")) {
-      _return = _.settings.control.zoom;
+      _return = _by_setting;
     } else {
       _return = _by_default;
     }
     return _return;
   };
+  /**
+    Return if the map set control type map
+    @request {boolean} [control-type=false]
+    @returns {boolean}
+  */
   Gmaps.prototype._getMapControlType = function(_default) {
     var _ = this,
       _return,
@@ -296,17 +313,22 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
       _by_setting = null,
       _by_attr = _.$map.attr("data-control-type");
     try {
-      _by_setting = parseInt(_.settings.control.type);
+      _by_setting = _.settings.control.type;
     } catch (e) {}
     if (typeof _by_attr === "boolean" && (typeof _by_attr !== "true" || typeof _by_attr !== "false")) {
       _return = _by_attr;
     } else if (typeof _by_setting === "boolean" && (typeof _by_setting !== "true" || typeof _by_setting !== "false")) {
-      _return = _.settings.control.type;
+      _return = _by_setting;
     } else {
       _return = _by_default;
     }
     return _return;
   };
+  /**
+    Return if the map set control type map
+    @request {boolean} [control-scale=false]
+    @returns {boolean}
+  */
   Gmaps.prototype._getMapControlScale = function(_default) {
     var _ = this,
       _return,
@@ -314,52 +336,149 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
       _by_setting = null,
       _by_attr = _.$map.attr("data-control-scale");
     try {
-      _by_setting = parseInt(_.settings.control.scale);
+      _by_setting = _.settings.control.scale;
     } catch (e) {}
     if (typeof _by_attr === "boolean" && (typeof _by_attr !== "true" || typeof _by_attr !== "false")) {
       _return = _by_attr;
     } else if (typeof _by_setting === "boolean" && (typeof _by_setting !== "true" || typeof _by_setting !== "false")) {
-      _return = _.settings.control.scale;
+      _return = _by_setting;
     } else {
       _return = _by_default;
     }
     return _return;
   };
-  Gmaps.prototype._getMapControlStreetView = function(element) {
-    var _ = this;
-    var _attr = $(element).attr('data-control-streetview');
-    return _.___getBoolean(_attr, false);
-  };
-  Gmaps.prototype._getMapControlRotate = function(element) {
-    var _ = this;
-    var _attr = $(element).attr('data-control-rotate');
-    return _.___getBoolean(_attr, false);
-  };
-  Gmaps.prototype._getMapControlFullscreen = function(element) {
-    var _ = this;
-    var _attr = $(element).attr('data-control-fullscreen');
-    return _.___getBoolean(_attr, false);
-  };
-  Gmaps.prototype._getMapEventDraggable = function(element) {
-    var _ = this;
-    var _attr = $(element).attr('data-event-draggable');
-    return _.___getBoolean(_attr, true);
-  };
-  Gmaps.prototype._getMapEventDoubleClickZoom = function(element) {
-    var _ = this;
-    var _attr = $(element).attr('data-event-doubleclick');
-    var _return = _.___getBoolean(_attr, true);
-    if (_return === false) {
-      _return = true;
+  /**
+    Return if the map set control street view map
+    @request {boolean} [control-scale=false]
+    @returns {boolean}
+  */
+  Gmaps.prototype._getMapControlStreetView = function(_default) {
+    var _ = this,
+      _return,
+      _by_default = _default,
+      _by_setting = null,
+      _by_attr = _.$map.attr("data-control-streetview");
+    try {
+      _by_setting = _.settings.control.streetview;
+    } catch (e) {}
+    if (typeof _by_attr === "boolean" && (typeof _by_attr !== "true" || typeof _by_attr !== "false")) {
+      _return = _by_attr;
+    } else if (typeof _by_setting === "boolean" && (typeof _by_setting !== "true" || typeof _by_setting !== "false")) {
+      _return = _by_setting;
     } else {
-      _return = false;
+      _return = _by_default;
     }
     return _return;
   };
-  Gmaps.prototype._getMapEventMouseWheel = function(element) {
-    var _ = this;
-    var _attr = $(element).attr('data-event-mousewheel');
-    return _.___getBoolean(_attr, false);
+  /**
+    Return if the map set control rotate map
+    @request {boolean} [control-scale=false]
+    @returns {boolean}
+  */
+  Gmaps.prototype._getMapControlRotate = function(_default) {
+    var _ = this,
+      _return,
+      _by_default = _default,
+      _by_setting = null,
+      _by_attr = _.$map.attr("data-control-rotate");
+    try {
+      _by_setting = _.settings.control.rotate;
+    } catch (e) {}
+    if (typeof _by_attr === "boolean" && (typeof _by_attr !== "true" || typeof _by_attr !== "false")) {
+      _return = _by_attr;
+    } else if (typeof _by_setting === "boolean" && (typeof _by_setting !== "true" || typeof _by_setting !== "false")) {
+      _return = _by_setting;
+    } else {
+      _return = _by_default;
+    }
+    return _return;
+  };
+  /**
+    Return if the map set control fullscreen map
+    @request {boolean} [control-scale=false]
+    @returns {boolean}
+  */
+  Gmaps.prototype._getMapControlFullscreen = function(_default) {
+    var _ = this,
+      _return,
+      _by_default = _default,
+      _by_setting = null,
+      _by_attr = _.$map.attr("data-control-fullscreen");
+    try {
+      _by_setting = _.settings.control.fullscreen;
+    } catch (e) {}
+    if (typeof _by_attr === "boolean" && (typeof _by_attr !== "true" || typeof _by_attr !== "false")) {
+      _return = _by_attr;
+    } else if (typeof _by_setting === "boolean" && (typeof _by_setting !== "true" || typeof _by_setting !== "false")) {
+      _return = _by_setting;
+    } else {
+      _return = _by_default;
+    }
+    return _return;
+  };
+  /**
+    Return if the map set control double click map
+    @request {boolean} [control-scale=false]
+    @returns {boolean}
+  */
+  Gmaps.prototype._getMapEventControlClickZoom = function(_default) {
+    var _ = this,
+      _return,
+      _by_default = _default,
+      _by_setting = null,
+      _by_attr = _.$map.attr("data-event-dblclickzoom");
+    try {
+      _by_setting = _.settings.event.dblclickZoom;
+    } catch (e) {}
+    if (typeof _by_attr === "boolean" && (typeof _by_attr !== "true" || typeof _by_attr !== "false")) {
+      _return = _by_attr;
+    } else if (typeof _by_setting === "boolean" && (typeof _by_setting !== "true" || typeof _by_setting !== "false")) {
+      _return = _by_setting;
+    } else {
+      _return = _by_default;
+    }
+    if (_return === true) {
+      _return = false;
+    } else {
+      _return = true;
+    }
+    return _return;
+  };
+  Gmaps.prototype._getMapEventDraggable = function(_default) {
+    var _ = this,
+      _return,
+      _by_default = _default,
+      _by_setting = null,
+      _by_attr = _.$map.attr("data-control-fullscreen");
+    try {
+      _by_setting = _.settings.control.fullscreen;
+    } catch (e) {}
+    if (typeof _by_attr === "boolean" && (typeof _by_attr !== "true" || typeof _by_attr !== "false")) {
+      _return = _by_attr;
+    } else if (typeof _by_setting === "boolean" && (typeof _by_setting !== "true" || typeof _by_setting !== "false")) {
+      _return = _by_setting;
+    } else {
+      _return = _by_default;
+    }
+    return _return;
+  };
+  Gmaps.prototype._getMapEventScrollWheel = function(_default) {
+    var _ = this,
+      _return,
+      _by_default = _default,
+      _by_setting = null,
+      _by_attr = _.$map.attr("data-event-scrollwheel");
+    try {
+      _by_setting = _.settings.event.scrollwheel;
+    } catch (e) {}
+    if (typeof _by_attr === "boolean" && (typeof _by_attr !== "true" || typeof _by_attr !== "false")) {
+      _return = _by_attr;
+    } else if (typeof _by_setting === "boolean" && (typeof _by_setting !== "true" || typeof _by_setting !== "false")) {
+      _return = _by_setting;
+    } else {
+      _return = _by_default;
+    }
+    return _return;
   };
   Gmaps.prototype._getMapStyle = function(settings) {
     try {
@@ -373,10 +492,13 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
     var $locations = $(element).find('.marker');
     var locations = [];
     $locations.each(function(i, marker) {
+      var _lat = $(marker).attr('data-lat');
+      var _lng = $(marker).attr('data-lng');
+      var _uid = $(marker).attr('data-id');
       var marker = {
-        'id': _.getMarkerID(marker),
-        'lat': $(marker).attr('data-lat'),
-        'lng': $(marker).attr('data-lng'),
+        'id': _.getMarkerID(_uid),
+        'lat': _lat,
+        'lng': _lng,
         'html': $(marker).html(),
         'icon': _.getMarkerIcon(marker),
         'draggable': _.getMarkerEventDraggable(marker),
@@ -388,24 +510,23 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
   Gmaps.prototype.mapInit = function() {
     var _ = this;
     var _opts = {};
-    _opts.zoom = _.config.map.options.zoom;
-    _opts.minZoom = _.config.map.options.zoom_min;
-    _opts.maxZoom = _.config.map.options.zoom_max;
-    _opts.mapTypeId = _.config.map.options.type;
-    _opts.zoomControl = _.config.map.controls.zoom;
-    _opts.mapTypeControl = _.config.map.controls.type;
-    _opts.scaleControl = _.config.map.controls.scale;
-    _opts.streetViewControl = _.config.map.controls.streetView;
-    _opts.rotateControl = _.controlRotate;
-    _opts.fullscreenControl = _.controlFullscreen;
-    _opts.draggable = _.eventDraggable;
-    _opts.disableDoubleClickZoom = _.eventDoubleClickZoom;
-    _opts.scrollwheel = _.eventMouseWheel;
-    console.log(_);
+    _opts.zoom = _.properties.map.option.zoom;
+    _opts.minZoom = _.properties.map.option.zoom_min;
+    _opts.maxZoom = _.properties.map.option.zoom_max;
+    _opts.mapTypeId = _.properties.map.option.type;
+    _opts.zoomControl = _.properties.map.control.zoom;
+    _opts.mapTypeControl = _.properties.map.control.type;
+    _opts.scaleControl = _.properties.map.control.scale;
+    _opts.streetViewControl = _.properties.map.control.streetview;
+    _opts.rotateControl = _.properties.map.control.rotate;
+    _opts.fullscreenControl = _.properties.map.control.fullscreen;
+    _opts.draggable = _.properties.map.event.draggable;
+    _opts.disableDoubleClickZoom = _.properties.map.event.dblclickZoom;
+    _opts.scrollwheel = _.properties.map.event.scrollwheel;
     _.$map.addClass('googlemap')
       .addClass('googlemap-load');
-    if (_.config.map.style !== false) {
-      _opts.styles = _.config.map.style;
+    if (_.properties.map.style !== false) {
+      _opts.styles = _.properties.map.style;
     }
     _.map = new google.maps.Map(_.$canvas.get(0), _opts);
     $.each(_.locations, function(index, value) {
@@ -413,21 +534,22 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
     });
     _.$map.trigger('onLoad');
     _.setCenter();
-    if (_.config.map.options.clustering) {
+    if (_.properties.map.option.clustering) {
       var markerCluster = new MarkerClusterer(_.map, _.markers, {
         imagePath: '//developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'
       });
     }
   };
-  Gmaps.prototype.getMarkerID = function(element) {
-    var _ = this;
-    var _attr = $(element).attr('data-id');
-    if (_attr === undefined) {
-      _attr = _.___randomId(10);
+  Gmaps.prototype.getMarkerID = function(_default) {
+    var _ = this,
+      _value = _default,
+      _return;
+    if (_value === undefined) {
+      _return = _.___createId(10);
     } else {
-      _attr = _.___slugify(_attr);
+      _return = _.___slugify(_value);
     }
-    return _attr;
+    return _return;
   }
   Gmaps.prototype.getMarkerIcon = function(element) {
     var _image = $(element).attr('data-marker-image');
@@ -521,14 +643,9 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
   };
   Gmaps.prototype.destroy = function() {
   };
-  Gmaps.prototype.___getBoolean = function(_value, __default) {
-    var _ret = __default;
-    if (_value === "true") {
-      _ret = true;
-    } else if (_value === "false") {
-      _ret = false;
-    }
-    return _ret;
+  Gmaps.prototype.___getLatLng = function(_latitude, _longitude) {
+    var _return = new google.maps.LatLng(_latitude, _longitude);
+    return _return;
   };
   Gmaps.prototype.___slugify = function(_string) {
     return _string.toString()
@@ -539,7 +656,7 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
       .replace(/^-+/, '')
       .replace(/-+$/, '');
   };
-  Gmaps.prototype.___randomId = function(lenght) {
+  Gmaps.prototype.___createId = function(lenght) {
     var charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     var _return = '';
     for (var i = 0; i < lenght; i++) {
@@ -547,6 +664,8 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
       _return += charset.substring(_rnd, _rnd + 1);
     }
     return _return.toLowerCase();
+  };
+  Gmaps.prototype.___log = function(lenght) {
   };
   $.fn.gmaps = function() {
     var _gmaps = this;
