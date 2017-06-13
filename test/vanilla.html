@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Gmaps - Clustering</title>
+  <link rel="stylesheet" href="../dist/jquery.gmaps.css">
+  
+  <style>
+    .back{
+
+    }
+    .gmaps {
+      height: 400px;
+      width: 100%;
+      background-color: #ccc;
+      margin-top: 10px;
+      position: relative;
+    }
+    .buttons{
+      margin-top: 40px;
+    }
+  </style>
+
+</head>
+<body>
+  
+    <h1>Marker open</h1>
+
+    <div data-key="AIzaSyAiKl_QPZ8L92aLRfpH23F5jzEuIETEhWw"
+      data-zoom="4"
+      role="map"
+      class="gmaps"
+      id="my-map">
+        
+        <div
+          data-id="marker-1"
+          data-lat="-25.363"
+          data-lng="131.044" 
+          class="marker">
+          <div class="map-card">
+            <h1>This is my title</h1>
+            <p>Address: Fake street, #445, Stgo.</p>
+            <p>Phone: +56753223344</p>
+            <p>e-Mail: fake@email.com</p>
+          </div>
+        </div>
+
+        <div
+          data-id="marker-2"
+          data-lat="-28.383"
+          data-lng="132.084" 
+          class="marker">
+          <div class="map-card">
+            <h1>This is my title</h1>
+            <p>Address: Fake street, #445, Stgo.</p>
+            <p>Phone: +56753223344</p>
+            <p>e-Mail: fake@email.com</p>
+          </div>
+        </div>
+
+        <div
+          data-id="marker-3"
+          data-lat="-30.383"
+          data-lng="138.084" 
+          class="marker">
+          <div class="map-card">
+            <h1>This is my title</h1>
+            <p>Address: Fake street, #445, Stgo.</p>
+            <p>Phone: +56753223344</p>
+            <p>e-Mail: fake@email.com</p>
+          </div>
+        </div>
+
+        <div
+          data-id="marker-4"
+          data-lat="-30.900"
+          data-lng="138.100" 
+          class="marker">
+          <div class="map-card">
+            <h1>This is my title</h1>
+            <p>Address: Fake street, #445, Stgo.</p>
+            <p>Phone: +56753223344</p>
+            <p>e-Mail: fake@email.com</p>
+          </div>
+        </div>
+
+        <div
+          data-id="marker-5"
+          data-lat="-31.900"
+          data-lng="140.100" 
+          class="marker">
+          <div class="map-card">
+            <h1>This is my title</h1>
+            <p>Address: Fake street, #445, Stgo.</p>
+            <p>Phone: +56753223344</p>
+            <p>e-Mail: fake@email.com</p>
+          </div>
+        </div>
+
+        <div
+          data-id="marker-6"
+          data-lat="-32.900"
+          data-lng="142.100" 
+          class="marker">
+          <div class="map-card">
+            <h1>This is my title</h1>
+            <p>Address: Fake street, #445, Stgo.</p>
+            <p>Phone: +56753223344</p>
+            <p>e-Mail: fake@email.com</p>
+          </div>
+        </div>
+
+    </div>
+
+    <div class="buttons">
+      <button class="marler" data-id="marker-1">Open Marker 1</button>
+      <button class="marler" data-id="marker-2">Open Marker 2</button>
+      <button class="marler" data-id="marker-3">Open Marker 3</button>
+      <button class="marler" data-id="marker-4">Open Marker 4</button>
+      <button class="marler" data-id="marker-5">Open Marker 5</button>
+      <button class="marler" data-id="marker-6">Open Marker 6</button>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="../dist/jquery.gmaps.js"></script>
+
+    <script>
+      $(document).ready(function(){
+        
+        var $map = $('#my-map').gmaps();
+
+        $map.on('onMarkerClick',function( event, position, id ){
+          console.log( position, id );
+        });
+
+        $('button[data-id]').click(function(){
+          var _id = $(this).attr('data-id');
+          $map.gmaps('openMarker',_id);
+        });
+
+      });
+    </script>
+
+  </body>
+</html>

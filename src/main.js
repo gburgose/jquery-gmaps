@@ -11,10 +11,7 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
 
 */
 
-
 (function ( $ ) {
-
-  'use strict';
 
   /*
   |--------------------------------------------------------------------------
@@ -26,7 +23,7 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
 
   Gmaps = (function() {
 
-      function Gmaps(element, settings , index) {
+      function Gmaps( element, settings ) {
 
         var _ = this; 
 
@@ -36,13 +33,12 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
         _.settings = settings;
         _.$canvas = null;
         _.$map = $( element );
-        _.index = index;
-        _.id = 'jquery-gmaps-' + index;
+        _.id = 'jquery-gmaps-' + _.___createId(5);
 
-        _.map                             = null;
-        _.markers                         = [];
-        _.bounds                          = null;
-        _.infowindows                     = [];
+        _.map = null;
+        _.markers = [];
+        _.bounds = null;
+        _.infowindows = [];
 
         // config
 
@@ -54,7 +50,7 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
         _.properties.map.event = []
 
         // Properties locations
-        _.locations                       =   _.getLocations( _.element );
+        _.locations = _.getLocations( _.element );
 
         _._init( _.element );
 
@@ -165,6 +161,7 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
 
     // Properties style
     _.properties.map.style                =   _._getMapStyle( _.settings );
+    _.properties.map.theme                =   _._getMapTheme( "default" );
 
     // Properties api options
     _.properties.map.api.key              =   _._getMapApiKey( undefined );
@@ -189,6 +186,43 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
     _.properties.map.event.draggable     =   _._getMapEventDraggable( true );
     _.properties.map.event.dblclickZoom  =   _._getMapEventControlClickZoom( true );
     _.properties.map.event.scrollwheel   =   _._getMapEventScrollWheel( false );
+
+  };
+
+  /*
+  |--------------------------------------------------------------------------
+  | Map Look
+  |--------------------------------------------------------------------------
+  */
+
+  Gmaps.prototype._getMapTheme = function( _default ){
+
+    var _ = this,
+        _return,
+        _by_default = _default,
+        _by_setting = null,
+        _by_attr = _.$map.attr("data-theme");
+
+    try{
+      _by_setting = _.settings.api.key;
+    } catch(e) {}
+
+    if ( typeof _by_attr === "string" )
+    {
+      _return = _by_attr;
+    } 
+    else if ( typeof _by_setting === "string" )
+    {
+      _return = _.settings.api.key;
+    } 
+    else 
+    {
+      _return = _by_default;
+    }
+
+    console.log( _return );
+
+    return _return;
 
   };
 
@@ -816,7 +850,17 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
     _.$map.addClass( 'googlemap' )
           .addClass( 'googlemap-load' );
 
-    if ( _.properties.map.style !== false ){ _opts.styles = _.properties.map.style; }
+    // Add Theme
+    var _look = _._setLook( _.properties.map.theme );
+    if ( _look !== false ){
+      _opts.styles = _look.style; 
+      _.$map.addClass( _look.class );
+    }
+
+    // Adding style
+    if ( _.properties.map.style !== false ){ 
+      _opts.styles = _.properties.map.style; 
+    }
 
     _.map = new google.maps.Map( _.$canvas.get(0) , _opts );
 
@@ -833,11 +877,9 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
 
     // Clustering
     if ( _.properties.map.option.clustering ){
-
       var markerCluster = new MarkerClusterer( _.map, _.markers,{
         imagePath: '//developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'
       });
-
     }
 
   };
@@ -914,7 +956,7 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
 
   Gmaps.prototype.addMarker = function( settings ) {
 
-    var gmap = this;
+    var _ = this;
 
     // create marker
 
@@ -922,7 +964,7 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
 
     options.id = settings.id
     options.position = new google.maps.LatLng( settings.lat, settings.lng );
-    options.map = gmap.map;
+    options.map = _.map;
     options.clickable = true;
     options.animation = google.maps.Animation.DROP;
 
@@ -944,38 +986,75 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
 
     var marker = new google.maps.Marker( options );
 
-    gmap.markers.push( marker );
+    _.markers.push( marker );
 
     // Create infowindow
     var infowindow = new google.maps.InfoWindow({
       content: settings.html
     });
 
-    gmap.infowindows.push( infowindow );
+    _.infowindows.push( infowindow );
 
+    // Load event
+    google.maps.event.addListener(infowindow, 'domready', function() {
+
+       // Reference to the DIV which receives the contents of the infowindow using jQuery
+       var _bubble = $('.gm-style-iw');
+
+       /* parent container */
+       var _parent = _bubble.parent().addClass('bubble');
+       //_parent.hide();
+
+       /* background */
+       var _background = _bubble.prev();
+       // Remove the background shadow DIV & the white background DIV
+       _background.children(':nth-child(2)').css({'display' : 'none'});
+       _background.children(':nth-child(4)').css({'display' : 'none'});
+
+       // Moves the shadow of the arrow 76px to the left margin.
+       var _container = _bubble;
+       _container.addClass('bubble-container');
+       _container.removeClass('gm-style-iw');
+
+       // Overview
+       var _overview = _container.children(':nth-child(1)');
+       _overview.addClass('bubble-container-overview');
+
+       // Close button custom style
+       var _close = _bubble.next();
+       _close.addClass('bubble-close');
+       _close.find('img').remove();
+       _close.attr('style','');
+
+       // load bubble
+       // _parent.addClass('is-load');
+
+    });
+
+    // Click event
     marker.addListener('click', function() {
       
       // close others infowindow
-      $.each( gmap.infowindows , function( index, object ) {
+      $.each( _.infowindows , function( index, object ) {
         object.close();
       });
       
       // open infowindow
-      infowindow.open(gmap.map, marker);
+      infowindow.open(_.map, marker);
       
       // Center at marker
-      gmap.map.setCenter( this.getPosition() );
+      // _.map.setCenter( this.getPosition() );
       
       // Callback returns
       var _position = {};
       _position.lat = parseFloat( marker.getPosition().lat() );
       _position.lng = parseFloat( marker.getPosition().lng() );
 
-      gmap.$map.trigger('onMarkerClick', [ _position, settings.id ] );
+      _.$map.trigger('onMarkerClick', [ _position, settings.id ] );
 
     });
 
-    gmap.map.setCenter( options.position );
+    _.map.setCenter( options.position );
 
   }
 
@@ -1020,6 +1099,47 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
       gmap.map.fitBounds( bounds );
     }
 
+  }
+
+  /*
+  |--------------------------------------------------------------------------
+  | Styles Maps
+  |--------------------------------------------------------------------------
+  */
+
+  Gmaps.prototype._makerLook = function() {
+
+    var look = [];
+
+    look.push({
+      'name' : 'black',
+      'class' : 'gmaps-style-black',
+      'style' : [{"featureType":"all","elementType":"labels.text.fill","stylers":[{"saturation":36},{"color":"#000000"},{"lightness":40}]},{"featureType":"all","elementType":"labels.text.stroke","stylers":[{"visibility":"on"},{"color":"#000000"},{"lightness":16}]},{"featureType":"all","elementType":"labels.icon","stylers":[{"visibility":"off"}]},{"featureType":"administrative","elementType":"geometry.fill","stylers":[{"color":"#000000"},{"lightness":20}]},{"featureType":"administrative","elementType":"geometry.stroke","stylers":[{"color":"#000000"},{"lightness":17},{"weight":1.2}]},{"featureType":"landscape","elementType":"geometry","stylers":[{"color":"#000000"},{"lightness":20}]},{"featureType":"poi","elementType":"geometry","stylers":[{"color":"#000000"},{"lightness":21}]},{"featureType":"road.highway","elementType":"geometry.fill","stylers":[{"color":"#000000"},{"lightness":17}]},{"featureType":"road.highway","elementType":"geometry.stroke","stylers":[{"color":"#000000"},{"lightness":29},{"weight":0.2}]},{"featureType":"road.arterial","elementType":"geometry","stylers":[{"color":"#000000"},{"lightness":18}]},{"featureType":"road.local","elementType":"geometry","stylers":[{"color":"#000000"},{"lightness":16}]},{"featureType":"transit","elementType":"geometry","stylers":[{"color":"#000000"},{"lightness":19}]},{"featureType":"water","elementType":"geometry","stylers":[{"color":"#000000"},{"lightness":17}]}]
+    })
+
+    look.push({
+      'name' : 'green',
+      'class' : 'gmaps-style-black',
+      'style' : [{"featureType":"all","elementType":"labels.text.fill","stylers":[{"saturation":36},{"color":"#000000"},{"lightness":40}]},{"featureType":"all","elementType":"labels.text.stroke","stylers":[{"visibility":"on"},{"color":"#000000"},{"lightness":16}]},{"featureType":"all","elementType":"labels.icon","stylers":[{"visibility":"off"}]},{"featureType":"administrative","elementType":"geometry.fill","stylers":[{"color":"#000000"},{"lightness":20}]},{"featureType":"administrative","elementType":"geometry.stroke","stylers":[{"color":"#000000"},{"lightness":17},{"weight":1.2}]},{"featureType":"landscape","elementType":"geometry","stylers":[{"color":"#000000"},{"lightness":20}]},{"featureType":"poi","elementType":"geometry","stylers":[{"color":"#000000"},{"lightness":21}]},{"featureType":"road.highway","elementType":"geometry.fill","stylers":[{"color":"#000000"},{"lightness":17}]},{"featureType":"road.highway","elementType":"geometry.stroke","stylers":[{"color":"#000000"},{"lightness":29},{"weight":0.2}]},{"featureType":"road.arterial","elementType":"geometry","stylers":[{"color":"#000000"},{"lightness":18}]},{"featureType":"road.local","elementType":"geometry","stylers":[{"color":"#000000"},{"lightness":16}]},{"featureType":"transit","elementType":"geometry","stylers":[{"color":"#000000"},{"lightness":19}]},{"featureType":"water","elementType":"geometry","stylers":[{"color":"#000000"},{"lightness":17}]}]
+    })
+
+    look.push({
+      'name' : 'red',
+      'class' : 'gmaps-style-black',
+      'style' : [{"featureType":"all","elementType":"labels.text.fill","stylers":[{"saturation":36},{"color":"#000000"},{"lightness":40}]},{"featureType":"all","elementType":"labels.text.stroke","stylers":[{"visibility":"on"},{"color":"#000000"},{"lightness":16}]},{"featureType":"all","elementType":"labels.icon","stylers":[{"visibility":"off"}]},{"featureType":"administrative","elementType":"geometry.fill","stylers":[{"color":"#000000"},{"lightness":20}]},{"featureType":"administrative","elementType":"geometry.stroke","stylers":[{"color":"#000000"},{"lightness":17},{"weight":1.2}]},{"featureType":"landscape","elementType":"geometry","stylers":[{"color":"#000000"},{"lightness":20}]},{"featureType":"poi","elementType":"geometry","stylers":[{"color":"#000000"},{"lightness":21}]},{"featureType":"road.highway","elementType":"geometry.fill","stylers":[{"color":"#000000"},{"lightness":17}]},{"featureType":"road.highway","elementType":"geometry.stroke","stylers":[{"color":"#000000"},{"lightness":29},{"weight":0.2}]},{"featureType":"road.arterial","elementType":"geometry","stylers":[{"color":"#000000"},{"lightness":18}]},{"featureType":"road.local","elementType":"geometry","stylers":[{"color":"#000000"},{"lightness":16}]},{"featureType":"transit","elementType":"geometry","stylers":[{"color":"#000000"},{"lightness":19}]},{"featureType":"water","elementType":"geometry","stylers":[{"color":"#000000"},{"lightness":17}]}]
+    })
+
+
+    return look;
+
+  };
+
+  Gmaps.prototype._setLook = function( _theme ) {
+    var _ = this;
+    if ( _theme === 'default' ) return false;
+    var result = $.grep( _._makerLook() , function(e){  return e.name === _theme; });
+    if ( result[0] === undefined ) return false;
+    return result[0];
   }
 
   /*
@@ -1074,23 +1194,23 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
 
   };
 
-  Gmaps.prototype.___createId = function( lenght ) {
-    var charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  Gmaps.prototype.___createId = function( _lenght ) {
+    
+    var charset = 'abcdefghijklmnopqrstuvwxyz0123456789';
     var _return = '';
-    for (var i = 0; i < lenght; i++) {
+    
+    for (var i = 0; i < _lenght; i++) {
         var _rnd = Math.floor(Math.random() * charset.length);
         _return += charset.substring( _rnd , _rnd + 1 );
     }
-    return _return.toLowerCase();
-  };
 
-  Gmaps.prototype.___log = function( lenght ) {
-    
+    return _return;
+
   };
 
   /*
   |--------------------------------------------------------------------------
-  | Init plugin
+  | jQuery Plugin
   |--------------------------------------------------------------------------
   */
 
@@ -1104,10 +1224,12 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
     var _return;
 
     for (i = 0; i < _length; i++) {
-      if (typeof _opt == 'object' || typeof _opt == 'undefined')
-        _gmaps[i].gmap = new Gmaps( _gmaps[i], _opt, i);
-      else
+      if (typeof _opt == 'object' || typeof _opt == 'undefined'){
+        console.log( _gmaps[i] );
+        _gmaps[i].gmap = new Gmaps( _gmaps[i], _opt );
+      } else {
         _return = _gmaps[i].gmap[_opt].apply(_gmaps[i].gmap, _args);
+      }
       if (typeof _return != 'undefined') return _return;
     }
 
