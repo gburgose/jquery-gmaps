@@ -988,71 +988,75 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
 
     _.markers.push( marker );
 
-    // Create infowindow
-    var infowindow = new google.maps.InfoWindow({
-      content: settings.html
-    });
+    if ( settings.html ){
 
-    _.infowindows.push( infowindow );
-
-    // Load event
-    google.maps.event.addListener(infowindow, 'domready', function() {
-
-       // Reference to the DIV which receives the contents of the infowindow using jQuery
-       var _bubble = $('.gm-style-iw');
-
-       /* parent container */
-       var _parent = _bubble.parent().addClass('bubble');
-       //_parent.hide();
-
-       /* background */
-       var _background = _bubble.prev();
-       // Remove the background shadow DIV & the white background DIV
-       _background.children(':nth-child(2)').css({'display' : 'none'});
-       _background.children(':nth-child(4)').css({'display' : 'none'});
-
-       // Moves the shadow of the arrow 76px to the left margin.
-       var _container = _bubble;
-       _container.addClass('bubble-container');
-       _container.removeClass('gm-style-iw');
-
-       // Overview
-       var _overview = _container.children(':nth-child(1)');
-       _overview.addClass('bubble-container-overview');
-
-       // Close button custom style
-       var _close = _bubble.next();
-       _close.addClass('bubble-close');
-       _close.find('img').remove();
-       _close.attr('style','');
-
-       // load bubble
-       // _parent.addClass('is-load');
-
-    });
-
-    // Click event
-    marker.addListener('click', function() {
-      
-      // close others infowindow
-      $.each( _.infowindows , function( index, object ) {
-        object.close();
+      // Create infowindow
+      var infowindow = new google.maps.InfoWindow({
+        content: settings.html
       });
-      
-      // open infowindow
-      infowindow.open(_.map, marker);
-      
-      // Center at marker
-      // _.map.setCenter( this.getPosition() );
-      
-      // Callback returns
-      var _position = {};
-      _position.lat = parseFloat( marker.getPosition().lat() );
-      _position.lng = parseFloat( marker.getPosition().lng() );
 
-      _.$map.trigger('onMarkerClick', [ _position, settings.id ] );
+      _.infowindows.push( infowindow );
 
-    });
+      // Load event
+      google.maps.event.addListener(infowindow, 'domready', function() {
+
+         // Reference to the DIV which receives the contents of the infowindow using jQuery
+         var _bubble = $('.gm-style-iw');
+
+         /* parent container */
+         var _parent = _bubble.parent().addClass('bubble');
+         //_parent.hide();
+
+         /* background */
+         var _background = _bubble.prev();
+         // Remove the background shadow DIV & the white background DIV
+         _background.children(':nth-child(2)').css({'display' : 'none'});
+         _background.children(':nth-child(4)').css({'display' : 'none'});
+
+         // Moves the shadow of the arrow 76px to the left margin.
+         var _container = _bubble;
+         _container.addClass('bubble-container');
+         _container.removeClass('gm-style-iw');
+
+         // Overview
+         var _overview = _container.children(':nth-child(1)');
+         _overview.addClass('bubble-container-overview');
+
+         // Close button custom style
+         var _close = _bubble.next();
+         _close.addClass('bubble-close');
+         _close.find('img').remove();
+         _close.attr('style','');
+
+         // load bubble
+         // _parent.addClass('is-load');
+
+      });
+
+      // Click event
+      marker.addListener('click', function() {
+        
+        // close others infowindow
+        $.each( _.infowindows , function( index, object ) {
+          object.close();
+        });
+        
+        // open infowindow
+        infowindow.open(_.map, marker);
+        
+        // Center at marker
+        // _.map.setCenter( this.getPosition() );
+        
+        // Callback returns
+        var _position = {};
+        _position.lat = parseFloat( marker.getPosition().lat() );
+        _position.lng = parseFloat( marker.getPosition().lng() );
+
+        _.$map.trigger('onMarkerClick', [ _position, settings.id ] );
+
+      });
+
+    }
 
     _.map.setCenter( options.position );
 

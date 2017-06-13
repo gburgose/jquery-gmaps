@@ -622,40 +622,42 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
     }
     var marker = new google.maps.Marker(options);
     _.markers.push(marker);
-    var infowindow = new google.maps.InfoWindow({
-      content: settings.html
-    });
-    _.infowindows.push(infowindow);
-    google.maps.event.addListener(infowindow, 'domready', function() {
-      var _bubble = $('.gm-style-iw');
-      var _parent = _bubble.parent().addClass('bubble');
-      var _background = _bubble.prev();
-      _background.children(':nth-child(2)').css({
-        'display': 'none'
+    if (settings.html) {
+      var infowindow = new google.maps.InfoWindow({
+        content: settings.html
       });
-      _background.children(':nth-child(4)').css({
-        'display': 'none'
+      _.infowindows.push(infowindow);
+      google.maps.event.addListener(infowindow, 'domready', function() {
+        var _bubble = $('.gm-style-iw');
+        var _parent = _bubble.parent().addClass('bubble');
+        var _background = _bubble.prev();
+        _background.children(':nth-child(2)').css({
+          'display': 'none'
+        });
+        _background.children(':nth-child(4)').css({
+          'display': 'none'
+        });
+        var _container = _bubble;
+        _container.addClass('bubble-container');
+        _container.removeClass('gm-style-iw');
+        var _overview = _container.children(':nth-child(1)');
+        _overview.addClass('bubble-container-overview');
+        var _close = _bubble.next();
+        _close.addClass('bubble-close');
+        _close.find('img').remove();
+        _close.attr('style', '');
       });
-      var _container = _bubble;
-      _container.addClass('bubble-container');
-      _container.removeClass('gm-style-iw');
-      var _overview = _container.children(':nth-child(1)');
-      _overview.addClass('bubble-container-overview');
-      var _close = _bubble.next();
-      _close.addClass('bubble-close');
-      _close.find('img').remove();
-      _close.attr('style', '');
-    });
-    marker.addListener('click', function() {
-      $.each(_.infowindows, function(index, object) {
-        object.close();
+      marker.addListener('click', function() {
+        $.each(_.infowindows, function(index, object) {
+          object.close();
+        });
+        infowindow.open(_.map, marker);
+        var _position = {};
+        _position.lat = parseFloat(marker.getPosition().lat());
+        _position.lng = parseFloat(marker.getPosition().lng());
+        _.$map.trigger('onMarkerClick', [_position, settings.id]);
       });
-      infowindow.open(_.map, marker);
-      var _position = {};
-      _position.lat = parseFloat(marker.getPosition().lat());
-      _position.lng = parseFloat(marker.getPosition().lng());
-      _.$map.trigger('onMarkerClick', [_position, settings.id]);
-    });
+    }
     _.map.setCenter(options.position);
   }
   Gmaps.prototype.openMarker = function(id) {
