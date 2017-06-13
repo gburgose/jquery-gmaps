@@ -38,7 +38,6 @@
     .bubble{
 
       background-color: #fff;
-      color: #333;
       border-radius: 3px;
       box-shadow: 3px 3px 3px rgba(black,.1);
       font-size: 14px;
@@ -54,6 +53,7 @@
         left: 0 !important;
         top: 0 !important;
         padding: 15px 20px 0;
+        max-width: 400px;
 
         .bubble-container-overview{
           width: 100% !important;
@@ -136,14 +136,12 @@
   &.gmaps-style-black{
     .googlemap-overview{
       .bubble{
-        background-color: #222;
         .bubble-container{
           .bubble-container-overview{
           }
         }
         .bubble-close{
           &:before, &:after{
-            background-color: white;
           }
         }
       }
@@ -154,10 +152,9 @@
 /*  Green */
 
 .googlemap{
-  &.gmaps-style-black{
+  &.gmaps-style-green{
     .googlemap-overview{
       .bubble{
-        background-color: #222;
         .bubble-container{
           .bubble-container-overview{
             color: white;
@@ -165,7 +162,6 @@
         }
         .bubble-close{
           &:before, &:after{
-            background-color: white;
           }
         }
       }

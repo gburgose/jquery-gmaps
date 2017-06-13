@@ -798,72 +798,28 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
     })
     look.push({
       'name': 'green',
-      'class': 'gmaps-style-black',
+      'class': 'gmaps-style-green',
       'style': [{
-        "featureType": "all",
-        "elementType": "labels.text.fill",
+        "featureType": "water",
+        "elementType": "geometry",
         "stylers": [{
-          "saturation": 36
-        }, {
-          "color": "#000000"
-        }, {
-          "lightness": 40
-        }]
-      }, {
-        "featureType": "all",
-        "elementType": "labels.text.stroke",
-        "stylers": [{
-          "visibility": "on"
-        }, {
-          "color": "#000000"
-        }, {
-          "lightness": 16
-        }]
-      }, {
-        "featureType": "all",
-        "elementType": "labels.icon",
-        "stylers": [{
-          "visibility": "off"
-        }]
-      }, {
-        "featureType": "administrative",
-        "elementType": "geometry.fill",
-        "stylers": [{
-          "color": "#000000"
-        }, {
-          "lightness": 20
-        }]
-      }, {
-        "featureType": "administrative",
-        "elementType": "geometry.stroke",
-        "stylers": [{
-          "color": "#000000"
+          "color": "#a0d6d1"
         }, {
           "lightness": 17
-        }, {
-          "weight": 1.2
         }]
       }, {
         "featureType": "landscape",
         "elementType": "geometry",
         "stylers": [{
-          "color": "#000000"
+          "color": "#ffffff"
         }, {
           "lightness": 20
-        }]
-      }, {
-        "featureType": "poi",
-        "elementType": "geometry",
-        "stylers": [{
-          "color": "#000000"
-        }, {
-          "lightness": 21
         }]
       }, {
         "featureType": "road.highway",
         "elementType": "geometry.fill",
         "stylers": [{
-          "color": "#000000"
+          "color": "#dedede"
         }, {
           "lightness": 17
         }]
@@ -871,7 +827,7 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
         "featureType": "road.highway",
         "elementType": "geometry.stroke",
         "stylers": [{
-          "color": "#000000"
+          "color": "#dedede"
         }, {
           "lightness": 29
         }, {
@@ -881,7 +837,7 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
         "featureType": "road.arterial",
         "elementType": "geometry",
         "stylers": [{
-          "color": "#000000"
+          "color": "#dedede"
         }, {
           "lightness": 18
         }]
@@ -889,96 +845,188 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
         "featureType": "road.local",
         "elementType": "geometry",
         "stylers": [{
-          "color": "#000000"
+          "color": "#ffffff"
         }, {
           "lightness": 16
+        }]
+      }, {
+        "featureType": "poi",
+        "elementType": "geometry",
+        "stylers": [{
+          "color": "#f1f1f1"
+        }, {
+          "lightness": 21
+        }]
+      }, {
+        "elementType": "labels.text.stroke",
+        "stylers": [{
+          "visibility": "on"
+        }, {
+          "color": "#ffffff"
+        }, {
+          "lightness": 16
+        }]
+      }, {
+        "elementType": "labels.text.fill",
+        "stylers": [{
+          "saturation": 36
+        }, {
+          "color": "#333333"
+        }, {
+          "lightness": 40
+        }]
+      }, {
+        "elementType": "labels.icon",
+        "stylers": [{
+          "visibility": "off"
         }]
       }, {
         "featureType": "transit",
         "elementType": "geometry",
         "stylers": [{
-          "color": "#000000"
+          "color": "#f2f2f2"
         }, {
           "lightness": 19
         }]
       }, {
-        "featureType": "water",
-        "elementType": "geometry",
+        "featureType": "administrative",
+        "elementType": "geometry.fill",
         "stylers": [{
-          "color": "#000000"
+          "color": "#fefefe"
+        }, {
+          "lightness": 20
+        }]
+      }, {
+        "featureType": "administrative",
+        "elementType": "geometry.stroke",
+        "stylers": [{
+          "color": "#fefefe"
         }, {
           "lightness": 17
+        }, {
+          "weight": 1.2
         }]
       }]
     })
     look.push({
       'name': 'red',
-      'class': 'gmaps-style-black',
+      'class': 'gmaps-style-red',
       'style': [{
-        "featureType": "all",
-        "elementType": "labels.text.fill",
         "stylers": [{
-          "saturation": 36
-        }, {
-          "color": "#000000"
-        }, {
-          "lightness": 40
+          "hue": "#dd0d0d"
         }]
       }, {
-        "featureType": "all",
-        "elementType": "labels.text.stroke",
-        "stylers": [{
-          "visibility": "on"
-        }, {
-          "color": "#000000"
-        }, {
-          "lightness": 16
-        }]
-      }, {
-        "featureType": "all",
-        "elementType": "labels.icon",
+        "featureType": "road",
+        "elementType": "labels",
         "stylers": [{
           "visibility": "off"
         }]
       }, {
-        "featureType": "administrative",
-        "elementType": "geometry.fill",
+        "featureType": "road",
+        "elementType": "geometry",
         "stylers": [{
-          "color": "#000000"
+          "lightness": 100
         }, {
-          "lightness": 20
+          "visibility": "simplified"
         }]
-      }, {
-        "featureType": "administrative",
-        "elementType": "geometry.stroke",
+      }]
+    })
+    look.push({
+      'name': 'blue',
+      'class': 'gmaps-style-blue',
+      'style': [{
+        "featureType": "water",
+        "elementType": "geometry",
         "stylers": [{
-          "color": "#000000"
-        }, {
-          "lightness": 17
-        }, {
-          "weight": 1.2
+          "color": "#193341"
         }]
       }, {
         "featureType": "landscape",
         "elementType": "geometry",
         "stylers": [{
-          "color": "#000000"
+          "color": "#2c5a71"
+        }]
+      }, {
+        "featureType": "road",
+        "elementType": "geometry",
+        "stylers": [{
+          "color": "#29768a"
         }, {
-          "lightness": 20
+          "lightness": -37
         }]
       }, {
         "featureType": "poi",
         "elementType": "geometry",
         "stylers": [{
-          "color": "#000000"
+          "color": "#406d80"
+        }]
+      }, {
+        "featureType": "transit",
+        "elementType": "geometry",
+        "stylers": [{
+          "color": "#406d80"
+        }]
+      }, {
+        "elementType": "labels.text.stroke",
+        "stylers": [{
+          "visibility": "on"
         }, {
-          "lightness": 21
+          "color": "#3e606f"
+        }, {
+          "weight": 2
+        }, {
+          "gamma": 0.84
+        }]
+      }, {
+        "elementType": "labels.text.fill",
+        "stylers": [{
+          "color": "#ffffff"
+        }]
+      }, {
+        "featureType": "administrative",
+        "elementType": "geometry",
+        "stylers": [{
+          "weight": 0.6
+        }, {
+          "color": "#1a3541"
+        }]
+      }, {
+        "elementType": "labels.icon",
+        "stylers": [{
+          "visibility": "off"
+        }]
+      }, {
+        "featureType": "poi.park",
+        "elementType": "geometry",
+        "stylers": [{
+          "color": "#2c5a71"
+        }]
+      }]
+    })
+    look.push({
+      'name': 'gray',
+      'class': 'gmaps-style-gray',
+      'style': [{
+        "featureType": "water",
+        "elementType": "geometry",
+        "stylers": [{
+          "color": "#e9e9e9"
+        }, {
+          "lightness": 17
+        }]
+      }, {
+        "featureType": "landscape",
+        "elementType": "geometry",
+        "stylers": [{
+          "color": "#f5f5f5"
+        }, {
+          "lightness": 20
         }]
       }, {
         "featureType": "road.highway",
         "elementType": "geometry.fill",
         "stylers": [{
-          "color": "#000000"
+          "color": "#ffffff"
         }, {
           "lightness": 17
         }]
@@ -986,7 +1034,7 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
         "featureType": "road.highway",
         "elementType": "geometry.stroke",
         "stylers": [{
-          "color": "#000000"
+          "color": "#ffffff"
         }, {
           "lightness": 29
         }, {
@@ -996,7 +1044,7 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
         "featureType": "road.arterial",
         "elementType": "geometry",
         "stylers": [{
-          "color": "#000000"
+          "color": "#ffffff"
         }, {
           "lightness": 18
         }]
@@ -1004,25 +1052,74 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
         "featureType": "road.local",
         "elementType": "geometry",
         "stylers": [{
-          "color": "#000000"
+          "color": "#ffffff"
         }, {
           "lightness": 16
+        }]
+      }, {
+        "featureType": "poi",
+        "elementType": "geometry",
+        "stylers": [{
+          "color": "#f5f5f5"
+        }, {
+          "lightness": 21
+        }]
+      }, {
+        "featureType": "poi.park",
+        "elementType": "geometry",
+        "stylers": [{
+          "color": "#dedede"
+        }, {
+          "lightness": 21
+        }]
+      }, {
+        "elementType": "labels.text.stroke",
+        "stylers": [{
+          "visibility": "on"
+        }, {
+          "color": "#ffffff"
+        }, {
+          "lightness": 16
+        }]
+      }, {
+        "elementType": "labels.text.fill",
+        "stylers": [{
+          "saturation": 36
+        }, {
+          "color": "#333333"
+        }, {
+          "lightness": 40
+        }]
+      }, {
+        "elementType": "labels.icon",
+        "stylers": [{
+          "visibility": "off"
         }]
       }, {
         "featureType": "transit",
         "elementType": "geometry",
         "stylers": [{
-          "color": "#000000"
+          "color": "#f2f2f2"
         }, {
           "lightness": 19
         }]
       }, {
-        "featureType": "water",
-        "elementType": "geometry",
+        "featureType": "administrative",
+        "elementType": "geometry.fill",
         "stylers": [{
-          "color": "#000000"
+          "color": "#fefefe"
+        }, {
+          "lightness": 20
+        }]
+      }, {
+        "featureType": "administrative",
+        "elementType": "geometry.stroke",
+        "stylers": [{
+          "color": "#fefefe"
         }, {
           "lightness": 17
+        }, {
+          "weight": 1.2
         }]
       }]
     })

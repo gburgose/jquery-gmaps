@@ -27,7 +27,6 @@
       box-sizing: border-box; }
     .googlemap .googlemap-overview .bubble {
       background-color: #fff;
-      color: #333;
       border-radius: 3px;
       box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.1);
       font-size: 14px; }
@@ -38,7 +37,8 @@
         width: 100% !important;
         left: 0 !important;
         top: 0 !important;
-        padding: 15px 20px 0; }
+        padding: 15px 20px 0;
+        max-width: 400px; }
         .googlemap .googlemap-overview .bubble .bubble-container .bubble-container-overview {
           width: 100% !important; }
           .googlemap .googlemap-overview .bubble .bubble-container .bubble-container-overview h1, .googlemap .googlemap-overview .bubble .bubble-container .bubble-container-overview h2, .googlemap .googlemap-overview .bubble .bubble-container .bubble-container-overview h3, .googlemap .googlemap-overview .bubble .bubble-container .bubble-container-overview h4, .googlemap .googlemap-overview .bubble .bubble-container .bubble-container-overview h5, .googlemap .googlemap-overview .bubble .bubble-container .bubble-container-overview h6 {
@@ -84,18 +84,9 @@
 |--------------------------------------------------------------------------
 */
 /*  Black */
-.googlemap.gmaps-style-black .googlemap-overview .bubble {
-  background-color: #222; }
-  .googlemap.gmaps-style-black .googlemap-overview .bubble .bubble-close:before, .googlemap.gmaps-style-black .googlemap-overview .bubble .bubble-close:after {
-    background-color: white; }
-
 /*  Green */
-.googlemap.gmaps-style-black .googlemap-overview .bubble {
-  background-color: #222; }
-  .googlemap.gmaps-style-black .googlemap-overview .bubble .bubble-container .bubble-container-overview {
-    color: white; }
-  .googlemap.gmaps-style-black .googlemap-overview .bubble .bubble-close:before, .googlemap.gmaps-style-black .googlemap-overview .bubble .bubble-close:after {
-    background-color: white; }
+.googlemap.gmaps-style-green .googlemap-overview .bubble .bubble-container .bubble-container-overview {
+  color: white; }
 
 /*
 |--------------------------------------------------------------------------
