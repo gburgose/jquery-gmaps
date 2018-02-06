@@ -8,7 +8,10 @@
     "yarn": "0.21.3",
     "npm": "4.5.0"
   },
-  "scripts": {},
+  "scripts": {
+    "watch": "node \"$(npm bin)/gulp\" watch",
+    "build": "node \"$(npm bin)/gulp\" build"
+  },
   "files": [
     "dist/jquery.gmaps.js",
     "dist/jquery.gmaps.min.js",
