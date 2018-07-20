@@ -1236,12 +1236,23 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
     var _length = _gmaps.length;
     var i;
     var _return;
+    var _context;
 
     for (i = 0; i < _length; i++) {
       if (typeof _opt === 'object' || typeof _opt === 'undefined'){
         _gmaps[i].gmap = new Gmaps( _gmaps[i], _opt );
       } else {
-        _return = _gmaps[i].gmap[_opt].apply(_gmaps[i].gmap, _args);
+        _return = _gmaps[i].gmap[_opt];
+        _context = _gmaps[i].gmap;
+
+        if (typeof _return === 'undefined') {
+          _return = _gmaps[i].gmap.map[_opt];
+          _context = _gmaps[i].gmap.map;
+        }
+
+        if (typeof _return === 'function') {
+          _return = _return.apply(_context, _args);
+        }
       }
 
       if (typeof _return !== 'undefined') return _return;
