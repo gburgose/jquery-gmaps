@@ -10,7 +10,8 @@
   },
   "scripts": {
     "watch": "node \"$(npm bin)/gulp\" watch",
-    "build": "node \"$(npm bin)/gulp\" build"
+    "build": "node \"$(npm bin)/gulp\" build",
+    "prepublish": "npm run build"
   },
   "files": [
     "dist/jquery.gmaps.js",
