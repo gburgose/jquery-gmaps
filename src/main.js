@@ -2,7 +2,7 @@
 
 | . |     | .'| . |_ -|
 |_  |_|_|_|__,|  _|___|
-|___|         |_|      
+|___|         |_|
 
 Author: Gabriel Burgos
 Website: http://gabrielburgos.cl
@@ -25,7 +25,7 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
 
       function Gmaps( element, settings ) {
 
-        var _ = this; 
+        var _ = this;
 
         // Properties
 
@@ -61,11 +61,11 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
   }());
 
   Gmaps.prototype._init = function( element ) {
-    var _ = this; 
+    var _ = this;
     // default settings
     _._getMapProperties();
     // Create floating map
-    _._canvas();  
+    _._canvas();
     // Add script and init map
     _._scripts();
   }
@@ -108,9 +108,9 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
     if ( $('#gmaps-api').length === 0 ){
 
       // Create API script
-      
+
       var _api = "//maps.googleapis.com/maps/api/js";
-      
+
       _api += '?key='      + _.properties.map.api.key;
       _api += '&language=' + _.properties.map.api.lang;
 
@@ -210,17 +210,15 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
     if ( typeof _by_attr === "string" )
     {
       _return = _by_attr;
-    } 
+    }
     else if ( typeof _by_setting === "string" )
     {
       _return = _.settings.api.key;
-    } 
-    else 
+    }
+    else
     {
       _return = _by_default;
     }
-
-    console.log( _return );
 
     return _return;
 
@@ -253,12 +251,12 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
     if ( typeof _by_attr === "string" )
     {
       _return = _by_attr;
-    } 
+    }
     else if ( typeof _by_setting === "string" )
     {
       _return = _.settings.api.key;
-    } 
-    else 
+    }
+    else
     {
       _return = _by_default;
     }
@@ -274,7 +272,7 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
   */
 
   Gmaps.prototype._getMapApiLanguage = function( _default ){
-    
+
     var _ = this,
         _return,
         _by_default = _default,
@@ -289,16 +287,16 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
     if ( typeof _by_attr === "string" )
     {
       _return = _by_attr;
-    } 
+    }
     else if ( typeof _by_setting === "string" )
     {
       _return = _.settings.api.lang;
-    } 
+    }
     else if ( typeof _by_html === "string" )
     {
       _return = _by_html;
-    } 
-    else 
+    }
+    else
     {
       _return = _by_default;
     }
@@ -320,7 +318,7 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
   */
 
   Gmaps.prototype._getMapOptionZoom = function( _default ){
-    
+
     var _ = this,
         _return,
         _by_default = _default,
@@ -343,7 +341,7 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
     if ( _return > 0 && _return < 17 ){
       _return = _by_default;
     }
-    
+
     return _return;
 
   };
@@ -355,9 +353,9 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
   */
 
   Gmaps.prototype._getMapOptionZoomMin = function( _default ){
-    
+
     var _ = this;
-    
+
     var _return,
         _by_default = _default,
         _by_setting = null,
@@ -379,7 +377,7 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
     if ( _return > 0 && _return < 17 ){
       _return = _by_default;
     }
-    
+
     return _return;
 
   };
@@ -391,7 +389,7 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
   */
 
   Gmaps.prototype._getMapOptionZoomMax = function( _default ){
-    
+
     var _ = this,
         _return,
         _by_default = _default,
@@ -414,7 +412,7 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
     if ( _return > 0 && _return < 17 ){
       _return = _by_default;
     }
-    
+
     return _return;
 
   };
@@ -426,7 +424,7 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
   */
 
   Gmaps.prototype._getMapOptionType = function( _default ){
-    
+
     var _ = this,
         _return,
         _by_default = _default,
@@ -450,7 +448,7 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
     if ( _return !== "roadmap" || _return !== "satellite" || _return !== "hybrid" || _return !== "terrain" ){
       _return = _default;
     }
-    
+
     return _return;
 
   };
@@ -498,7 +496,7 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
   */
 
   Gmaps.prototype._getMapControlZoom = function( _default ){
-    
+
     var _ = this,
         _return,
         _by_default = _default,
@@ -528,7 +526,7 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
   */
 
   Gmaps.prototype._getMapControlType = function( _default ){
-    
+
     var _ = this,
         _return,
         _by_default = _default,
@@ -558,7 +556,7 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
   */
 
   Gmaps.prototype._getMapControlScale = function( _default ){
-    
+
     var _ = this,
         _return,
         _by_default = _default,
@@ -618,7 +616,7 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
   */
 
   Gmaps.prototype._getMapControlRotate = function( _default ){
-    
+
     var _ = this,
         _return,
         _by_default = _default,
@@ -648,7 +646,7 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
   */
 
   Gmaps.prototype._getMapControlFullscreen = function( _default ){
-    
+
     var _ = this,
         _return,
         _by_default = _default,
@@ -715,7 +713,7 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
   */
 
   Gmaps.prototype._getMapEventDraggable = function( _default ){
-    
+
     var _ = this,
         _return,
         _by_default = _default,
@@ -738,10 +736,10 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
 
   };
 
-  
+
 
   Gmaps.prototype._getMapEventScrollWheel = function( _default ){
-    
+
     var _ = this,
         _return,
         _by_default = _default,
@@ -771,7 +769,7 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
   */
 
   Gmaps.prototype._getMapStyle = function( settings ){
-    
+
     try {
       return settings.style;
     } catch(err) {
@@ -807,7 +805,7 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
         'icon' : _.getMarkerIcon( marker ),
         'draggable' : _.getMarkerEventDraggable( marker ),
       };
-      
+
       locations.push( marker );
 
     });
@@ -823,7 +821,7 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
   */
 
   Gmaps.prototype.mapInit = function() {
-    
+
     var _ = this;
     var _opts = {};
 
@@ -833,7 +831,7 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
     _opts.minZoom                   = _.properties.map.option.zoom_min;
     _opts.maxZoom                   = _.properties.map.option.zoom_max;
     _opts.mapTypeId                 = _.properties.map.option.type;
-    
+
     // Map controls
 
     _opts.zoomControl               = _.properties.map.control.zoom;
@@ -853,13 +851,13 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
     // Add Theme
     var _look = _._setLook( _.properties.map.theme );
     if ( _look !== false ){
-      _opts.styles = _look.style; 
+      _opts.styles = _look.style;
       _.$map.addClass( _look.class );
     }
 
     // Adding style
-    if ( _.properties.map.style !== false ){ 
-      _opts.styles = _.properties.map.style; 
+    if ( _.properties.map.style !== false ){
+      _opts.styles = _.properties.map.style;
     }
 
     _.map = new google.maps.Map( _.$canvas.get(0) , _opts );
@@ -891,19 +889,19 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
   */
 
   Gmaps.prototype.getMarkerID = function( _default ){
-    
+
     var _ = this,
         _value = _default,
         _return;
 
-    if ( _value === undefined ){  
+    if ( _value === undefined ){
       _return = _.___createId(10);
     } else {
       _return = _.___slugify(_value);
     }
 
     return _return;
-  
+
   }
 
   Gmaps.prototype.getMarkerIcon = function( element ){
@@ -1035,18 +1033,18 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
 
       // Click event
       marker.addListener('click', function() {
-        
+
         // close others infowindow
         $.each( _.infowindows , function( index, object ) {
           object.close();
         });
-        
+
         // open infowindow
         infowindow.open(_.map, marker);
-        
+
         // Center at marker
         // _.map.setCenter( this.getPosition() );
-        
+
         // Callback returns
         var _position = {};
         _position.lat = parseFloat( marker.getPosition().lat() );
@@ -1071,7 +1069,7 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
   Gmaps.prototype.openMarker = function( id ) {
 
     var _ = this;
-    
+
     $.each( _.markers , function( index, marker ) {
       if ( marker.id === id ){
         new google.maps.event.trigger( marker, 'click' );
@@ -1199,10 +1197,10 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
   */
 
   Gmaps.prototype.___slugify = function( _string ) {
-    
+
     return _string.toString()
       .toLowerCase()
-      .replace(/\s+/g, '-')           
+      .replace(/\s+/g, '-')
       .replace(/[^\w\-]+/g, '')
       .replace(/\-\-+/g, '-')
       .replace(/^-+/, '')
@@ -1211,10 +1209,10 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
   };
 
   Gmaps.prototype.___createId = function( _lenght ) {
-    
+
     var charset = 'abcdefghijklmnopqrstuvwxyz0123456789';
     var _return = '';
-    
+
     for (var i = 0; i < _lenght; i++) {
         var _rnd = Math.floor(Math.random() * charset.length);
         _return += charset.substring( _rnd , _rnd + 1 );
@@ -1231,7 +1229,7 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
   */
 
   $.fn.gmaps = function() {
-    
+
     var _gmaps = this;
     var _opt = arguments[0];
     var _args = Array.prototype.slice.call(arguments, 1);
@@ -1240,13 +1238,13 @@ Issues: https://github.com/gburgose/jquery-gmaps/issues
     var _return;
 
     for (i = 0; i < _length; i++) {
-      if (typeof _opt == 'object' || typeof _opt == 'undefined'){
-        console.log( _gmaps[i] );
+      if (typeof _opt === 'object' || typeof _opt === 'undefined'){
         _gmaps[i].gmap = new Gmaps( _gmaps[i], _opt );
       } else {
         _return = _gmaps[i].gmap[_opt].apply(_gmaps[i].gmap, _args);
       }
-      if (typeof _return != 'undefined') return _return;
+
+      if (typeof _return !== 'undefined') return _return;
     }
 
     return _gmaps;
